@@ -10,3 +10,4 @@ Visit page: <https://johnhal.gitlab.io/pose_python>
 - [ ] Finish `PoseComparison` class
 - [ ] Finish tests of `Rotation2D` class
 - [ ] Finish documentation
+- [ ] Create transformation class for multiple transformations
