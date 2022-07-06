@@ -13,8 +13,7 @@ class Rotation2D:
             log.error(f"Rotation2D - Incorrect input size: {np.size(input_vector)}. Vector must be dimension 2.")
             return
 
-        result = self.as_matrix().dot(input_vector)
-        return result
+        return np.matmul(self.as_matrix(), input_vector)
 
     def inv(self):
         self.angle = -self.angle
@@ -25,21 +24,21 @@ class Rotation2D:
         else:
             self.angle = value
 
-    def from_matrix(self, matrix: np.array):
+    def from_matrix(self, matrix: np.ndarray):
         dummy_vector = np.array([1.0, 0.0])
-        self.align_vectors(dummy_vector, matrix.dot(dummy_vector))
+        self.align_vectors(dummy_vector, np.matmul(matrix, dummy_vector))
 
-    def as_euler(self, degree: bool) -> float:
-        if degree:
+    def as_euler(self, degrees: bool = False) -> float:
+        if degrees:
             return np.rad2deg(self.angle)
         else:
             return self.angle
 
     def as_matrix(self) -> np.ndarray:
-        matrix = [[cos(self.angle), -sin(self.angle)],
-                  [sin(self.angle), cos(self.angle)]]
+        matrix = np.array([[cos(self.angle), -sin(self.angle)],
+                           [sin(self.angle), cos(self.angle)]])
 
-        return np.array(matrix)
+        return matrix
 
     def identity(self):
         self.angle = 0.0
@@ -47,7 +46,7 @@ class Rotation2D:
     def random(self):
         self.angle = uniform((0.0, 2.0*pi))
 
-    def align_vectors(self, a: np.array, b: np.array):
+    def align_vectors(self, a: np.ndarray, b: np.ndarray):
         inner = np.inner(a, b)
         norms = np.linalg.norm(a) * np.linalg.norm(b)
 
