@@ -8,6 +8,10 @@ class Pose2D:
         self.position = np.array([0.0, 0.0])
 
     def print(self):
-        print(self.name.title())
+        print(f"Pose2D: {self.name.title()}")
         print(f"Position: {self.position} [m]")
-        print(f"Rotation: {self.rotation.as_euler(degrees=True)} [deg]")
+        print(f"Rotation: {self.rotation.as_euler(degrees=True)} [deg]\n")
+
+    def random(self):
+        self.rotation = Rotation2D.random()
+        self.position = np.random.rand(2)
