@@ -7,6 +7,6 @@ Visit page: <https://johnhal.gitlab.io/pose_python>
 
 ## Todos
 
-- [ ] Finish Transform and TransformSet class
 - [ ] Finish tests of `Rotation2D` class
+- [ ] Create tests of `Transform` and `TransformSet` classes
 - [ ] Finish documentation
