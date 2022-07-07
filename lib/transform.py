@@ -1,6 +1,8 @@
 import numpy as np
 from scipy.spatial.transform import Rotation
 
+from pose import Pose
+
 
 class Transform:
     def __init__(self, name: str, orig: str = None, dest: str = None) -> None:
@@ -26,12 +28,24 @@ class Transform:
         return inv_transform
 
     def apply(self, input):
-        pass
+        # If input is 3D vector
+        if type(input) is np.ndarray and np.size(input) == 3:
+            return self.rotation.apply(input) + self.translation
+
+        # If input is pose
+        if type(input) is Pose:
+            input.rotation = self.rotation.apply(input.rotation)
+            input.position += self.translation
+
+            return input
 
     def matrix(self, homogeneous: bool = True):
+
         matrix = np.eye(4)
-        matrix[:3, :3] = self.orientation.as_matrix()
-        matrix[:3, 3] = self.translation
+        
+        if self.orig != self.dest:
+            matrix[:3, :3] = self.orientation.as_matrix()
+            matrix[:3, 3] = self.translation
 
         if not homogeneous:
             return matrix[:3, :]
