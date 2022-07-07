@@ -1,7 +1,5 @@
 import numpy as np
-
-from pose import Pose, Rotation
-from pose2d import Pose2D
+from scipy.spatial.transform import Rotation
 
 
 class PoseComparison:
