@@ -63,7 +63,7 @@ class TransformSet:
     def wrench_change_frame(self, wrench: np.ndarray, from_frame: str, to_frame: str):
         # Verify input
         if not wrench.shape == (6,):
-            log.error(f"TransformSet - Invalid wrench input. SHape must be (6,)")
+            log.error(f"TransformSet - Invalid wrench input. Shape must be (6,)")
             return
 
         # Create compound transformation
