@@ -62,7 +62,7 @@ class TransformSet:
 
     def wrench_change_frame(self, wrench: np.ndarray, from_frame: str, to_frame: str):
         # Verify input
-        if not wrench.shape == (6,):
+        if not np.array(wrench).shape == (6,):
             log.error(f"TransformSet - Invalid wrench input. Shape must be (6,)")
             return
 
@@ -108,7 +108,7 @@ class TransformSet:
 
         # Create compound transformation
         full_transformation = Transform(name=f"{from_frame}2{to_frame}", orig=from_frame, dest=to_frame)
-        full_transformation.translation = transf_to_base.rotation.apply(transf_to_dest.translation) + transf_to_base.translation
+        full_transformation.translation = transf_to_base.orientation.apply(transf_to_dest.translation) + transf_to_base.translation
         full_transformation.orientation = Rotation.from_matrix(np.matmul(transf_to_base.orientation.as_matrix(), transf_to_dest.orientation.as_matrix()))
 
         return full_transformation
