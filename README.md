@@ -8,4 +8,3 @@ Visit page: <https://johnhal.gitlab.io/pose_python>
 ## Todos
 
 - [ ] Finish tests of `Rotation2D` class
-- [ ] Write documentation

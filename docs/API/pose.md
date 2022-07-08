@@ -27,3 +27,10 @@ The documentation for these classes can be found by clicking on their respective
 | `__init__` | Constructor function: Requires name to be set, will set the position to [0, 0, 0] and the rotation to identity. |
 | `print` | Print the elements of the pose to the console (will print the rotation in euler angles). |
 | `random` | Set the position and rotation to random (mostly used for testing purposes). |
+
+## Requirements
+
+| Name | Description | Code Link | Documentation Link |
+| :--: | :---------- | :-------: | :----------------: |
+| `numpy` | The fundamental package for scientific computing with Python | <https://github.com/numpy/numpy> | <https://numpy.org/doc/> |
+| `scipy` | General management of scientific data | <https://github.com/scipy/scipy> | <https://docs.scipy.org/doc/scipy-1.8.1/> |
