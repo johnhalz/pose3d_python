@@ -1,25 +1,21 @@
-from sys import path
-from os.path import dirname, join, abspath
-path.insert(0, abspath(join(dirname(__file__), '..')))
+from pose3d.rotation2d import Rotation2D
 
-from lib.rotation2d import Rotation2D
-
-def euler2euler_test(angle: float, passing_cirteria: float = 0.001):
+def euler2euler_test(angle: float, passing_criteria: float = 0.001):
 
     rotation = Rotation2D()
-    rotation.from_euler(angle, degree=True)
+    rotation.from_euler(angle, degrees=True)
 
-    assert (abs(angle - rotation.as_euler(degree=True))/angle) < passing_cirteria
+    assert (abs(angle - rotation.as_euler(degrees=True))/angle) < passing_criteria
 
     return True
 
-def inv_test(angle: float, passing_cirteria: float = 0.001):
+def inv_test(angle: float, passing_criteria: float = 0.001):
 
     rotation = Rotation2D()
-    rotation.from_euler(angle, degree=True)
+    rotation.from_euler(angle, degrees=True)
     rotation.inv()
 
-    assert (abs(-angle - rotation.as_euler(degree=True))/angle) < passing_cirteria
+    assert (abs(-angle - rotation.as_euler(degrees=True))/angle) < passing_criteria
 
     return True
 

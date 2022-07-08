@@ -1,13 +1,9 @@
 import numpy as np
 from scipy.spatial.transform import Rotation
 
-from sys import path
-from os.path import dirname, join, abspath
-path.insert(0, abspath(join(dirname(__file__), '..')))
-
-from lib.transform import Transform
-from lib.pose import Pose
-from lib.pose_comparison import PoseComparison
+from pose3d.transform import Transform
+from pose3d.pose import Pose
+from pose3d.pose_comparison import PoseComparison
 
 
 # Verify compatibility with poses

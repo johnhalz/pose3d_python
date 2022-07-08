@@ -16,11 +16,10 @@ class Rotation2D:
         return np.matmul(self.as_matrix(), input_vector)
 
     def inv(self):
-        new_rotation = Rotation2D()
-        new_rotation.angle = -self.angle
+        self.angle = -self.angle
 
-    def from_euler(self, value: float, degree: bool):
-        if degree:
+    def from_euler(self, value: float, degrees: bool):
+        if degrees:
             self.angle = np.deg2rad(value)
         else:
             self.angle = value

@@ -1,11 +1,7 @@
 import numpy as np
 from scipy.spatial.transform import Rotation
 
-from sys import path
-from os.path import dirname, join, abspath
-path.insert(0, abspath(join(dirname(__file__), '.')))
-
-from pose import Pose
+from .pose import Pose
 
 
 class Transform:
@@ -40,7 +36,7 @@ class Transform:
         
         # If input is pose
         if type(input) is Pose:
-            input.rotation = self.orientation.apply(input.rotation)
+            input.rotation.from_matrix(np.matmul(self.orientation.as_matrix(), input.rotation.as_matrix()))
             input.position += self.translation
 
         # If input is 3D vector
