@@ -50,7 +50,7 @@ def inv_test(passing_criteria: float = 0.001):
 
     transf = Transform(name='demo')
     transf.translation = np.random.rand(3)
-    transf.orientation = Rotation.random()
+    transf.rotation = Rotation.random()
 
     inv_transf = transf.inv()
 

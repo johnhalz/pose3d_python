@@ -19,10 +19,10 @@ class PoseComparison:
         position_difference = np.subtract(pose_1.position, pose_2.position)
 
         if position_difference.shape == (2,):
-            rotation_difference = abs(pose_1.rotation.as_euler(degrees) - pose_2.rotation.as_euler(degrees))
+            rotation_difference = abs(pose_1.orientation.as_euler(degrees) - pose_2.orientation.as_euler(degrees))
 
         elif position_difference.shape == (3,):
-            mat = np.matmul(pose_1.rotation.inv().as_matrix(), pose_2.rotation.as_matrix())
+            mat = np.matmul(pose_1.orientation.inv().as_matrix(), pose_2.orientation.as_matrix())
             compound_rot = Rotation.from_matrix(mat)
             rotation_difference = np.linalg.norm(compound_rot.as_rotvec(degrees=degrees))
 

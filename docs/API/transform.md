@@ -10,7 +10,7 @@ The `Transform` class contains all of the requirements to transform a vector, po
 | `orig` | `str` | Name given to origin frame of reference. |
 | `dest` | `str` | Name given to destination frame of reference. |
 | `translation` | `np.ndarray` | Translation vector assigned to transformation (set to 0 at new instance). |
-| `orientation` | `scipy.spatial.transform.Rotation` | Rotation class assigned to transformation (set to identity at new instance). |
+| `rotation` | `scipy.spatial.transform.Rotation` | Rotation class assigned to transformation (set to identity at new instance). |
 
 ## Class Methods
 

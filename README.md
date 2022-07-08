@@ -1,6 +1,6 @@
-# `pose_python` - Position and Orientation Python Library
+# Pose3D - Position and Orientation Python Library
 
-Repo to help handling 3D and 2D poses as well as transformations between reference frames.
+Handling 2D and 3D poses as well as transformations between reference frames.
 
 ## Documentation
 Visit page: <https://johnhal.gitlab.io/pose_python>

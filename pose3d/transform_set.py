@@ -68,8 +68,8 @@ class TransformSet:
         force_at_orig = wrench[:3]
         torque_at_orig = wrench[3:]
 
-        torque_at_dest = full_transf.orientation.apply(np.cross(force_at_orig, full_transf.translation) + torque_at_orig)
-        force_at_dest = full_transf.orientation.apply(force_at_orig)
+        torque_at_dest = full_transf.rotation.apply(np.cross(force_at_orig, full_transf.translation) + torque_at_orig)
+        force_at_dest = full_transf.rotation.apply(force_at_orig)
 
         return np.hstack([force_at_dest, torque_at_dest])
 
@@ -103,7 +103,7 @@ class TransformSet:
 
         # Create compound transformation
         full_transformation = Transform(name=f"{from_frame}2{to_frame}", orig=from_frame, dest=to_frame)
-        full_transformation.translation = transf_to_base.orientation.apply(transf_to_dest.translation) + transf_to_base.translation
-        full_transformation.orientation = Rotation.from_matrix(np.matmul(transf_to_base.orientation.as_matrix(), transf_to_dest.orientation.as_matrix()))
+        full_transformation.translation = transf_to_base.rotation.apply(transf_to_dest.translation) + transf_to_base.translation
+        full_transformation.rotation = Rotation.from_matrix(np.matmul(transf_to_base.rotation.as_matrix(), transf_to_dest.rotation.as_matrix()))
 
         return full_transformation

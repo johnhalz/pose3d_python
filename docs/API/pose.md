@@ -18,7 +18,7 @@ The documentation for these classes can be found by clicking on their respective
 | :--: | :--: | :---------- |
 | `name` | `str` | String to hold the name of the pose. This variable must be set when a new instance of the class is created. |
 | `position` | `numpy.ndarray` | 3D array meant to to hold the position element of the pose. |
-| `rotation` | `scipy.spatial.transform.Rotation` | Rotation element meant to hold the orientation of the pose. |
+| `orientation` | `scipy.spatial.transform.Rotation` | Rotation element meant to hold the orientation of the pose. |
 
 ## Class Methods
 
