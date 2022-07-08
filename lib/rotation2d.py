@@ -6,7 +6,7 @@ from random import uniform
 
 class Rotation2D:
     def __init__(self) -> None:
-        self.angle = 0.0    # Value is stored in radians
+        self.angle: float = 0.0    # Value is stored in radians
 
     def apply(self, input_vector: np.array) -> np.ndarray:
         if not np.size(input_vector) == 2:
@@ -16,7 +16,8 @@ class Rotation2D:
         return np.matmul(self.as_matrix(), input_vector)
 
     def inv(self):
-        self.angle = -self.angle
+        new_rotation = Rotation2D()
+        new_rotation.angle = -self.angle
 
     def from_euler(self, value: float, degree: bool):
         if degree:
