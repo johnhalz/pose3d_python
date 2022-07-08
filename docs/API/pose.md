@@ -1,6 +1,16 @@
 # Pose Class
 
-This page covers the `Pose` class. This class is a wrapper around the already existing [`scipy.spatial.transform.Rotation`](https://docs.scipy.org/doc/scipy/reference/generated/scipy.spatial.transform.Rotation.html) class and the [`numpy.array`](https://numpy.org/doc/stable/reference/generated/numpy.array.html) class. The documentation for these classes can be found by clicking on their respective links.
+This page covers the `Pose` and `Pose2D` class. For the 3D `Pose` class, this class is a wrapper around the following:
+
+- `scipy.spatial.transform.Rotation` [Documentation Link](https://docs.scipy.org/doc/scipy/reference/generated/scipy.spatial.transform.Rotation.html)
+- `numpy.array` [Documentation Link](https://numpy.org/doc/stable/reference/generated/numpy.array.html)
+
+The 2D `Pose2D` class is a wrapper around the following:
+
+- `pose_python.Rotation2D`
+- `numpy.array` [Documentation Link](https://numpy.org/doc/stable/reference/generated/numpy.array.html)
+
+The documentation for these classes can be found by clicking on their respective links.
 
 ## Member Variables
 
