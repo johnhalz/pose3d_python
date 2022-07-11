@@ -4,7 +4,7 @@ __pycache__/
 
 env/lib
 
-pose3d.egg-info
+*.egg-info
 build
 dist
 
