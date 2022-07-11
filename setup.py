@@ -8,6 +8,12 @@ from pathlib import Path
 this_directory = Path(__file__).parent
 long_description = (this_directory / "README.md").read_text()
 
+# Add 
+project_urls = {
+  'Documentation': 'https://johnhal.gitlab.io/pose_python',
+  'Repository': 'https://gitlab.com/johnhal/pose_python'
+}
+
 # Setting up
 setup(
     name="pose3d",
@@ -20,6 +26,7 @@ setup(
     packages=find_packages(),
     install_requires=open("requirements.txt", "r").read().split("\n"),
     keywords=['python', 'pose', 'transform'],
+    project_urls = project_urls,
     classifiers=[
         "Intended Audience :: Developers",
         "Programming Language :: Python :: 3",
