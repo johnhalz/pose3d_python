@@ -8,7 +8,7 @@ from pathlib import Path
 this_directory = Path(__file__).parent
 long_description = (this_directory / "README.md").read_text()
 
-# Add 
+# Add resource links
 project_urls = {
   'Documentation': 'https://johnhal.gitlab.io/pose_python',
   'Repository': 'https://gitlab.com/johnhal/pose_python'
