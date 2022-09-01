@@ -1,6 +1,7 @@
 site_name: Pose Python
 
 copyright: Copyright &copy; 2022 John Halazonetis
+repo_url: https://github.com/johnhalz/pose3d
 
 theme:
   name: material
