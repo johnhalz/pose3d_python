@@ -25,7 +25,7 @@ class TransformSet:
         valid_rotation_types = ['euler', 'quaternion', 'rotvec', 'matrix', 'rodrigues']
         for frame_name in self.frame_data.keys():
             new_transf = Transform(name=frame_name, orig='base', dest=frame_name)
-            new_transf.position = self.frame_data[frame_name]['translation']
+            new_transf.translation = self.frame_data[frame_name]['translation']
 
             degree_opt = 'degree' in self.frame_data[frame_name]['orientation_units']
             orientation_type = self.frame_data[frame_name]['orientation_type']
