@@ -11,7 +11,7 @@ long_description = (this_directory / "README.md").read_text()
 # Add resource links
 project_urls = {
   'Documentation': 'https://johnhal.gitlab.io/pose_python',
-  'Repository': 'https://gitlab.com/johnhal/pose_python'
+  'Repository': 'https://github.com/johnhalz/pose3d'
 }
 
 # Setting up
