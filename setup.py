@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-VERSION = '1.1.2'
+VERSION = '1.1.3'
 DESCRIPTION = 'Transforming and handling poses.'
 
 # Read the contents of README file
@@ -24,7 +24,7 @@ setup(
     long_description=long_description,
     long_description_content_type='text/markdown',
     packages=find_packages(),
-    install_requires=open("requirements.txt", "r").read().split("\n"),
+    install_requires=['numpy', 'scipy'],
     keywords=['python', 'pose', 'transform'],
     project_urls = project_urls,
     classifiers=[
