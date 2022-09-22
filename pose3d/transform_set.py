@@ -2,6 +2,7 @@ import toml
 import numpy as np
 from scipy.spatial.transform import Rotation
 import logging as log
+import pandas as pd
 
 from .transform import Transform
 
@@ -72,6 +73,44 @@ class TransformSet:
         force_at_dest = full_transf.rotation.apply(force_at_orig)
 
         return np.hstack([force_at_dest, torque_at_dest])
+
+
+    def wrench_df_change_frame(self, wrench_df: pd.DataFrame, from_frame: str, to_frame: str) -> pd.DataFrame:
+        '''
+        Function to perform coordinate transformation on wrench data in pandas dataframe. Returned dataframe
+        will have the same index, column names and dimensions as the input dataframe.
+
+        Note: Dataframe must have 6 columns, where the first three represent the forces on x, y, z; and the
+            last three representing the torques on x, y, z (in that order).
+
+        Args
+            wrench_df (pd.DataFrame): Pandas dataframe containing wrench data in original frame
+            from_frame (str): Name of origin frame
+            to_frame (str): Name of target frame
+
+        Returns
+            pd.DataFrame: Dataframe containing wrench data in target frame (same index, column names and shape as input `wrench_df`)
+        '''
+        # Verify input
+        if wrench_df.shape[1] != 6:
+            log.error(f'TransformSet - Invalid wrench input. Dataframe should have 6 columns (given {wrench_df.shape[1]})')
+            return
+
+        # Create transformation matrix
+        transf_mat = self.transform_matrix(from_frame=from_frame, to_frame=to_frame)
+
+        # Get column names from dataframe and create output dataframe
+        cols = wrench_df.columns
+        transf_wrench = pd.DataFrame(index=wrench_df.index, columns=cols)
+
+        # Perform coordinate transformation
+        for i in range(len(cols)):
+            if i < 3:
+                transf_wrench[cols[i]] = transf_mat[i, 0]*wrench_df[cols[0]] + transf_mat[i, 1]*wrench_df[cols[1]] + transf_mat[i, 2]*wrench_df[cols[2]]
+            else:
+                transf_wrench[cols[i]] = ... # TODO: Add calculation for moment coordinate transformations (see https://johnhal.gitlab.io/pose_python/Theory/transformations/)
+
+        return transf_wrench
 
 
     def transform_matrix(self, from_frame: str, to_frame: str, homogeneous: bool = True):
