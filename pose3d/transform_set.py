@@ -103,12 +103,18 @@ class TransformSet:
         cols = wrench_df.columns
         transf_wrench = pd.DataFrame(index=wrench_df.index, columns=cols)
 
+        # Compute unrotated moment
+        unrot_moment = pd.DataFrame(index=wrench_df.index, columns=['Tx', 'Ty', 'Tz'])
+        unrot_moment['Tx'] = wrench_df[cols[1]] * transf_mat[2, 3] - wrench_df[cols[2]] * transf_mat[1, 3] + wrench_df[cols[3]]
+        unrot_moment['Ty'] = wrench_df[cols[2]] * transf_mat[0, 3] - wrench_df[cols[0]] * transf_mat[2, 3] + wrench_df[cols[4]]
+        unrot_moment['Tz'] = wrench_df[cols[0]] * transf_mat[1, 3] - wrench_df[cols[1]] * transf_mat[0, 3] + wrench_df[cols[5]]
+
         # Perform coordinate transformation
         for i in range(len(cols)):
             if i < 3:
                 transf_wrench[cols[i]] = transf_mat[i, 0]*wrench_df[cols[0]] + transf_mat[i, 1]*wrench_df[cols[1]] + transf_mat[i, 2]*wrench_df[cols[2]]
             else:
-                transf_wrench[cols[i]] = ... # TODO: Add calculation for moment coordinate transformations (see https://johnhal.gitlab.io/pose_python/Theory/transformations/)
+                transf_wrench[cols[i]] = transf_mat[i-3, 0]*unrot_moment['Tx'] + transf_mat[i-3, 1]*unrot_moment['Ty'] + transf_mat[i-3, 2]*unrot_moment['Tz']
 
         return transf_wrench
 
