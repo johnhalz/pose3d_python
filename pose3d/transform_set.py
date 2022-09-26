@@ -49,6 +49,7 @@ class TransformSet:
 
             self.transformations.append(new_transf)
 
+
     def change_frame(self, input, from_frame: str, to_frame: str) -> np.ndarray:
         '''
         Coordinate transformation of a pose (6D vector) from origin frame to target frame.
@@ -69,6 +70,7 @@ class TransformSet:
 
         return full_transf.apply(input)
 
+
     def df_change_frame(self, input: pd.DataFrame, from_frame: str, to_frame: str, rotation_type: str) -> pd.DataFrame:
         '''Function to change frame of a list of poses in a pandas dataframe
 
@@ -83,6 +85,7 @@ class TransformSet:
         '''
 
         # TODO: Define how poses should be represented
+
 
     def wrench_change_frame(self, wrench: np.ndarray, from_frame: str, to_frame: str) -> np.ndarray:
         '''
@@ -115,6 +118,7 @@ class TransformSet:
         force_at_dest = full_transf.rotation.apply(force_at_orig)
 
         return np.hstack([force_at_dest, torque_at_dest])
+
 
     def wrench_df_change_frame(self, wrench_df: pd.DataFrame, from_frame: str, to_frame: str) -> pd.DataFrame:
         '''
@@ -165,6 +169,7 @@ class TransformSet:
 
         return transf_wrench
 
+
     def transform_matrix(self, from_frame: str, to_frame: str, homogeneous: bool = True) -> np.ndarray:
         '''
         Return the transformation matrix to transform poses from origin
@@ -186,6 +191,7 @@ class TransformSet:
         full_transf = self.__create_compound_transf(from_frame, to_frame)
 
         return full_transf.matrix()
+
 
     def __create_compound_transf(self, from_frame: str, to_frame: str) -> Transform:
         '''
