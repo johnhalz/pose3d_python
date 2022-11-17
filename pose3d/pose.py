@@ -1,17 +1,34 @@
 import numpy as np
-from scipy.spatial.transform import Rotation
+from .te import TE
+from .re3 import RE3
 
 class Pose:
-    def __init__(self, name: str) -> None:
+    def __init__(self, name: str = '') -> None:
         self.name = name
-        self.orientation = Rotation.identity()
-        self.position = np.array([0.0, 0.0, 0.0])
-
-    def print(self):
-        print(f"Pose: {self.name.title()}")
-        print(f"Position:    {self.position} [m]")
-        print(f"Orientation: {self.orientation.as_euler('xyz', degrees=True)} [deg]\n")
+        self.orientation = RE3()
+        self.position = TE(dim=3)
 
     def random(self):
-        self.orientation = Rotation.random()
-        self.position = np.random.rand(3)
+        self.orientation.random()
+        self.position.random()
+
+    def zero(self):
+        self.orientation.identity()
+        self.position.zero()
+
+    # Operator overloads
+    def __repr__(self) -> str:
+        return f'''Pose2D - {self.name}:
+        Position:    {self.position.__repr__}
+        Orientation: {self.orientation.__repr__}'''
+
+    def __str__(self) -> str:
+        return f'Position:    {self.position.__repr__}\nOrientation: {self.orientation.__repr__}'
+
+    def __eq__(self, other):
+        if isinstance(other, Pose):
+            return self.orientation == other.orientation and self.position == other.position
+
+    def __ne__(self, other):
+        if isinstance(other, Pose):
+            return self.orientation != other.orientation or self.position != other.position
