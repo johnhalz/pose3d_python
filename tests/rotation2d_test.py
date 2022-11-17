@@ -1,4 +1,8 @@
-from pose3d.rotation2d import Rotation2D
+from pathlib import Path
+from  sys import path
+path.append(Path(__file__).parent.parent.as_posix())
+
+from pose3d import Rotation2D
 
 def euler2euler_test(angle: float, passing_criteria: float = 0.001):
 

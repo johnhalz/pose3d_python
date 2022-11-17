@@ -1,9 +1,11 @@
 import numpy as np
 from scipy.spatial.transform import Rotation
 
-from pose3d.transform import Transform
-from pose3d.pose import Pose
-from pose3d.pose_comparison import PoseComparison
+from pathlib import Path
+from  sys import path
+path.append(Path(__file__).parent.parent.as_posix())
+
+from pose3d import Transform, Pose, PoseComparison
 
 
 # Verify compatibility with poses
