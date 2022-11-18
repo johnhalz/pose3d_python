@@ -76,14 +76,16 @@ class Transform:
         return io
 
     # Operator overloads
-    def __str__(self) -> str:
-        pass
-
     def __repr__(self) -> str:
-        pass
+        return f'''Transform ({self.__dim}D) - {self.name}:
+        Position:    {self.position.__repr__}
+        Orientation: {self.orientation.__repr__}'''
+
+    def __str__(self) -> str:
+        return f'Translation: {self.position.__repr__}\nRotation:    {self.orientation.__repr__}'
 
     def __eq__(self, other: object) -> bool:
-        return self.translation
+        return self.translation == other.translation and self.rotation == other.rotation
 
     def __ne__(self, other: object) -> bool:
-        pass
+        return self.translation != other.translation or self.rotation != other.rotation
