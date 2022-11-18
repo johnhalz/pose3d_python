@@ -1,63 +1,89 @@
 import numpy as np
-from scipy.spatial.transform import Rotation
+
+from .te import TE
+from .re3 import RE3
+from .re2 import RE2
 
 from .pose import Pose
 
+from .utils import valid_dim
 
 class Transform:
-    def __init__(self, name: str, orig: str = None, dest: str = None) -> None:
+    def __init__(self, name: str, orig: str = 'origin', dest: str = 'destination', dim: int = 3) -> None:
         # Set strings
         self.name = name
 
-        if orig is None and dest is None:
-            self.orig = 'origin'
-            self.dest = 'destination'
-        else:
-            self.orig = orig
-            self.dest = dest
-
         # Init translation and orientation
-        self.translation = np.zeros(3)
-        self.rotation = Rotation.identity()
+        if valid_dim(dim):
+            self.__dim = dim
+            self.translation = TE(dim=dim)
+            if dim == 3:
+                self.rotation = RE3()
+            if dim == 2:
+                self.rotation = RE2()
 
-    def print(self):
-        print(f"Transformation: {self.name.title()}")
-        print(f"Translation: {self.translation} [m]")
-        print(f"Rotation:    {self.rotation.as_euler('xyz', degrees=True)} [deg]\n")
+    # Setter functions
+    def between_poses(self, pose_1: Pose, pose_2: Pose):
+        '''
+        Compute transform between 2 poses (3D).
+
+        This instance of Transform will be modifed to compute the transform from pose_1 to pose_2.
+
+        Args:
+            pose_1 (Pose): Origin pose.
+            pose_2 (Pose): Destination pose.
+        '''
+        if pose_1.__dim != pose_2.__dim:
+            raise AttributeError(f'Number of dimensions between both poses do not match: pose_1.__dim = {pose_1.__dim} and pose_2.__dim = {pose_2.__dim}')
 
     def inv(self):
         inv_transform = Transform(name=f"{self.name} (Inverse)")
         inv_transform.rotation = self.rotation.inv()
-        inv_transform.translation = -inv_transform.rotation.apply(self.translation)
+        inv_transform.translation.from_vector(-inv_transform.rotation.apply(self.translation.vector()))
 
         return inv_transform
 
-    def apply(self, input):
-        
-        # If input is pose
-        if type(input) is Pose:
-            input.orientation.from_matrix(np.matmul(self.rotation.as_matrix(), input.orientation.as_matrix()))
-            input.position += self.translation
+    def random(self):
+        self.translation.random()
+        self.rotation.random()
+    
+    # Getter functions
+    def matrix(self, homogeneous: bool = True) -> np.ndarray:
 
-        # If input is 3D vector
-        elif type(input) is np.ndarray and np.size(input) == 3:
-            input = self.rotation.apply(input) + self.translation
-
-        return input
-
-    def matrix(self, homogeneous: bool = True):
-
-        matrix = np.eye(4)
+        matrix = np.eye(self.__dim + 1)
         
         if self.orig != self.dest:
-            matrix[:3, :3] = self.rotation.as_matrix()
-            matrix[:3, 3] = self.translation
+            matrix[:self.__dim, :self.__dim] = self.rotation.as_matrix()
+            matrix[:self.__dim, self.__dim] = self.translation
 
         if not homogeneous:
-            return matrix[:3, :]
+            return matrix[:self.__dim, :]
         
         return matrix
 
-    def random(self):
-        self.translation = np.random.rand(3)
-        self.rotation = Rotation.random()
+    # Computation functions
+    def apply(self, io):
+        
+        # If io is pose
+        if isinstance(io, Pose):
+            io.orientation.from_matrix(np.matmul(self.rotation.as_matrix(), io.orientation.as_matrix()))
+            io.position += self.translation
+
+        # If io is numpy vector
+        if isinstance(io, np.ndarray):
+            io = self.rotation.apply(io) + self.translation
+
+        return io
+
+    # Operator overloads
+    def __str__(self) -> str:
+        pass
+
+    def __repr__(self) -> str:
+        pass
+
+    def __eq__(self, other: object) -> bool:
+        return self.translation
+
+    def __ne__(self, other: object) -> bool:
+        pass
