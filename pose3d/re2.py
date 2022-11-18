@@ -1,5 +1,4 @@
 import numpy as np
-from math import fmod
 
 class RE2:
     def __init__(self, name: str = '', angle: float = None, degrees: bool = True, matrix: np.ndarray = None) -> None:
@@ -15,17 +14,17 @@ class RE2:
 
     # Setter functions
     def identity(self):
-        self.__rotation = np.eye(2)
+        self.from_matrix(np.eye(2))
 
     def inv(self):
-        self.__rotation = np.linalg.inv(self.__rotation)
+        self.from_matrix(np.linalg.inv(self.as_matrix()))
 
     def random(self):
         self.__rotation.random()
 
     def from_matrix(self, matrix: np.ndarray) -> None:
         if matrix.shape == np.eye(2).shape:
-            self.__rotation = matrix
+            self.from_matrix(matrix)
 
     def from_euler(self, angle: float, degrees: bool = True) -> None:
         # Convert angle to radians (if necessary):
@@ -42,8 +41,7 @@ class RE2:
         return self.__rotation
 
     def as_euler(self, degrees: bool = True):
-        angle = np.arccos(self.as_matrix()[0][0])
-        angle = np.sign(self.as_matrix()[1][0])[0] * angle
+        angle = np.sign(self.as_matrix()[1][0])[0] * np.arccos(self.as_matrix()[0][0])
 
         if degrees:
             angle = np.rad2deg(angle)
@@ -62,10 +60,14 @@ class RE2:
         return f"{self.as_euler(True)} degrees"
 
     def __eq__(self, other):
-        if isinstance(other, RE3):
+        if isinstance(other, RE2):
             return np.array_equal(self.as_matrix(), other.as_matrix())
+        else:
+            raise TypeError(f'Input parameter is {type(other)}, not RE2 as expected.')
 
     def __ne__(self, other):
-        if isinstance(other, RE3):
+        if isinstance(other, RE2):
             return not np.array_equal(self.as_matrix(), other.as_matrix())
+        else:
+            raise TypeError(f'Input parameter is {type(other)}, not RE2 as expected.')
     
