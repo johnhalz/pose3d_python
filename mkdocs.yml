@@ -1,7 +1,7 @@
 site_name: Pose Python
 
 copyright: Copyright &copy; 2022 John Halazonetis
-repo_url: https://github.com/johnhalz/pose3d
+repo_url: https://gitlab.com/johnhal/pose3d_python
 
 theme:
   name: material
@@ -47,7 +47,7 @@ markdown_extensions:
       custom_fences:
         - name: mermaid
           class: mermaid
-          format: !!python/name:pymdownx.superfences.fence_code_format
+          format: python/name:pymdownx.superfences.fence_code_format
   - pymdownx.caret
   - pymdownx.mark
   - pymdownx.tilde
