@@ -55,8 +55,12 @@ class RE3:
     def __eq__(self, other):
         if isinstance(other, RE3):
             return np.array_equal(self.as_quat(), other.as_quat())
+        else:
+            raise TypeError(f'Input parameter is {type(other)}, not RE3 as expected.')
 
     def __ne__(self, other):
         if isinstance(other, RE3):
             return not np.array_equal(self.as_quat(), other.as_quat())
+        else:
+            raise TypeError(f'Input parameter is {type(other)}, not RE3 as expected.')
     
