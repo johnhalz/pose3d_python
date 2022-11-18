@@ -36,6 +36,19 @@ class Transform:
         if pose_1.__dim != pose_2.__dim:
             raise AttributeError(f'Number of dimensions between both poses do not match: pose_1.__dim = {pose_1.__dim} and pose_2.__dim = {pose_2.__dim}')
 
+        # Modify dimension of transformation depending on pose_1 and pose_2
+        if pose_1.__dim != self.__dim:
+            self.__dim = pose_1.__dim
+            if self.__dim == 3:
+                self.rotation = RE3()
+            elif self.__dim == 2:
+                self.rotation = RE2()
+
+        # Compute rotation from pose_1 to pose_2
+        self.rotation.from_matrix(np.divide(pose_2.orientation.as_matrix(), pose_1.orientation.as_matrix()))
+        self.translation.from_vector(pose_2.position.vector() - pose_1.position.vector())
+        
+
     def inv(self):
         inv_transform = Transform(name=f"{self.name} (Inverse)")
         inv_transform.rotation = self.rotation.inv()
