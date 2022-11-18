@@ -1,5 +1,4 @@
 from .pose import Pose
-from .pose_comparison import PoseComparison
 from .transform_set import TransformSet
 from .transform import Transform
 
