@@ -33,7 +33,7 @@ class RE3:
         return self.__rotation.as_quat()
 
     def as_matrix(self) -> np.ndarray:
-        return self.__rotation.as_matrix()
+        return self.__rotation.as_matrix().reshape((3, 3))
 
     def as_angle_axis(self) -> np.ndarray:
         return self.__rotation.as_rotvec()

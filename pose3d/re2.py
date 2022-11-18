@@ -38,7 +38,7 @@ class RE2:
 
     # Getter functions
     def as_matrix(self) -> np.ndarray:
-        return self.__rotation
+        return self.__rotation.reshape((2, 2))
 
     def as_euler(self, degrees: bool = True):
         angle = np.sign(self.as_matrix()[1][0])[0] * np.arccos(self.as_matrix()[0][0])
