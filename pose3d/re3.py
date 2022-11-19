@@ -1,32 +1,33 @@
 import numpy as np
 from scipy.spatial.transform import Rotation
+from .utils import RE_TOLERANCE
 
 class RE3:
     def __init__(self, name: str = '') -> None:
         self.name = name
-        self.__rotation = Rotation()
+        self.__rotation = Rotation(quat=[0, 0, 0, 1])
 
     # Setter functions
     def identity(self):
-        self.__rotation.identity()
+        self.__rotation = Rotation.identity()
 
     def inv(self):
-        self.__rotation.inv()
+        self.__rotation = self.__rotation.inv()
 
     def random(self):
-        self.__rotation.random()
+        self.__rotation =  Rotation.random()
 
     def from_quat(self, quat: np.ndarray) -> None:
-        self.__rotation.from_quat(quat)
+        self.__rotation = Rotation.from_quat(quat)
 
     def from_matrix(self, matrix: np.ndarray) -> None:
-        self.__rotation.from_matrix(matrix)
+        self.__rotation = Rotation.from_matrix(matrix)
 
     def from_angle_axis(self, angle_axis: np.ndarray) -> None:
-        self.__rotation.from_rotvec(angle_axis)
+        self.__rotation = Rotation.from_rotvec(angle_axis)
 
     def from_euler(self, sequence: str, angles: list, degrees: bool = True) -> None:
-        self.__rotation.from_euler(sequence, angles, degrees)
+        self.__rotation = Rotation.from_euler(sequence, angles, degrees)
 
     # Getter functions
     def as_quat(self) -> np.ndarray:
@@ -54,13 +55,19 @@ class RE3:
 
     def __eq__(self, other):
         if isinstance(other, RE3):
-            return np.array_equal(self.as_quat(), other.as_quat())
+            return np.allclose(self.as_quat(),
+                               other.as_quat(),
+                               rtol=RE_TOLERANCE,
+                               atol=RE_TOLERANCE)
         else:
             raise TypeError(f'Input parameter is {type(other)}, not RE3 as expected.')
 
     def __ne__(self, other):
         if isinstance(other, RE3):
-            return not np.array_equal(self.as_quat(), other.as_quat())
+            return not np.allclose(self.as_quat(),
+                                   other.as_quat(),
+                                   rtol=RE_TOLERANCE,
+                                   atol=RE_TOLERANCE)
         else:
             raise TypeError(f'Input parameter is {type(other)}, not RE3 as expected.')
     
