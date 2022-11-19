@@ -1,8 +1,7 @@
 import numpy as np
 
 from .te import TE
-from .re3 import RE3
-from .re2 import RE2
+from .re import RE
 
 from .pose import Pose
 
@@ -17,10 +16,7 @@ class Transform:
         if valid_dim(dim):
             self.__dim = dim
             self.translation = TE(dim=dim)
-            if dim == 3:
-                self.rotation = RE3()
-            if dim == 2:
-                self.rotation = RE2()
+            self.rotation = RE(dim=dim)
 
     # Setter functions
     def between_poses(self, pose_1: Pose, pose_2: Pose):
@@ -39,10 +35,7 @@ class Transform:
         # Modify dimension of transformation depending on pose_1 and pose_2
         if pose_1.__dim != self.__dim:
             self.__dim = pose_1.__dim
-            if self.__dim == 3:
-                self.rotation = RE3()
-            elif self.__dim == 2:
-                self.rotation = RE2()
+            self.rotation = RE(dim=self.__dim)
 
         # Compute rotation from pose_1 to pose_2
         self.rotation.from_matrix(np.divide(pose_2.orientation.as_matrix(), pose_1.orientation.as_matrix()))

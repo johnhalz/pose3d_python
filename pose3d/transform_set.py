@@ -23,7 +23,7 @@ class TransformSet:
 
         # Convert dictionary parameters to a list of transformations
         self.transformations = []
-        valid_rotation_types = ['euler', 'quaternion', 'rotvec', 'matrix', 'rodrigues']
+        valid_rotation_types = ['euler', 'quaternion', 'angle-axis', 'matrix', 'rodrigues']
         for frame_name in self.frame_data.keys():
             new_transf = Transform(name=frame_name, orig='base', dest=frame_name)
             new_transf.translation = self.frame_data[frame_name]['translation']
@@ -37,15 +37,13 @@ class TransformSet:
                     f"TransformSet - Invalid rotation type: {orientation_type}. Rotation type must be: {valid_rotation_types}")
                 continue
             elif orientation_type == 'euler':
-                new_transf.rotation = Rotation.from_euler('xyz', orientation_value, degrees=degree_opt)
+                new_transf.rotation.from_euler('xyz', orientation_value, degrees=degree_opt)
             elif orientation_type == 'quaternion':
-                new_transf.rotation = Rotation.from_quat(orientation_value)
-            elif orientation_type == 'rotvec':
-                new_transf.rotation = Rotation.from_rotvec(orientation_value, degrees=degree_opt)
+                new_transf.rotation.from_quat(orientation_value)
+            elif orientation_type == 'angle-axis':
+                new_transf.rotation.from_angle_axis(orientation_value)
             elif orientation_type == 'matrix':
-                new_transf.rotation = Rotation.from_matrix(orientation_value)
-            elif orientation_type == 'rodrigues':
-                new_transf.rotation = Rotation.from_mrp(orientation_value)
+                new_transf.rotation.from_matrix(orientation_value)
 
             self.transformations.append(new_transf)
 

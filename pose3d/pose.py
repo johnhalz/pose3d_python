@@ -1,6 +1,5 @@
 from .te import TE
-from .re3 import RE3
-from .re2 import RE2
+from .re import RE
 
 from .utils import valid_dim
 
@@ -11,10 +10,7 @@ class Pose:
         if valid_dim(dim):
             self.__dim = dim
             self.position = TE(dim=dim)
-            if dim == 3:
-                self.orientation = RE3()
-            if dim == 2:
-                self.orientation = RE2()
+            self.orientation = RE(dim=dim)
 
     def random(self):
         self.orientation.random()
@@ -25,12 +21,12 @@ class Pose:
         self.position.zero()
 
     # Operator overloads
-    def __repr__(self) -> str:
+    def __str__(self) -> str:
         return f'''Pose ({self.__dim}D) - {self.name}:
         Position:    {self.position.__repr__}
         Orientation: {self.orientation.__repr__}'''
 
-    def __str__(self) -> str:
+    def __repr__(self) -> str:
         return f'Position:    {self.position.__repr__}\nOrientation: {self.orientation.__repr__}'
 
     def __eq__(self, other) -> bool:

@@ -4,21 +4,21 @@ from pathlib import Path
 from  sys import path
 path.append(Path(__file__).parent.parent.as_posix())
 
-from pose3d import RE3
+from pose3d import RE
 
 RE_TOLERANCE = 1e-10
 
-def test_re3_init():
-    re = RE3(name='init_re')
+def test_re_init():
+    re = RE(name='init_re')
     assert np.array_equal(re.as_matrix(), np.eye(3))
 
-def test_re3_random():
-    re = RE3(name='random_re')
+def test_re_random():
+    re = RE(name='random_re')
     re.random()
     assert not np.array_equal(re.as_quat(), [0, 0, 0, 1])
 
-def test_re3_quat():
-    re = RE3(name='re1')
+def test_re_quat():
+    re = RE(name='re1')
 
     re.random()
     quaternion_1 = re.as_quat()
@@ -30,8 +30,8 @@ def test_re3_quat():
                        rtol=RE_TOLERANCE,
                        atol=RE_TOLERANCE)
 
-def test_re3_matrix():
-    re = RE3(name='re1')
+def test_re_matrix():
+    re = RE(name='re1')
 
     re.random()
     matrix_1 = re.as_matrix()
@@ -43,8 +43,8 @@ def test_re3_matrix():
                        rtol=RE_TOLERANCE,
                        atol=RE_TOLERANCE)
 
-def test_re3_angle_axis():
-    re = RE3(name='re1')
+def test_re_angle_axis():
+    re = RE(name='re1')
 
     re.random()
     angle_axis_1 = re.as_angle_axis()
@@ -56,8 +56,8 @@ def test_re3_angle_axis():
                        rtol=RE_TOLERANCE,
                        atol=RE_TOLERANCE)
 
-def test_re3_euler():
-    re = RE3(name='re1')
+def test_re_euler():
+    re = RE(name='re1')
 
     # Test for units in degrees and radians
     for degree_opt in [True, False]:
@@ -73,8 +73,8 @@ def test_re3_euler():
                            rtol=RE_TOLERANCE,
                            atol=RE_TOLERANCE)
 
-def test_re3_apply_and_inv():
-    re = RE3(name='re1')
+def test_re_apply_and_inv():
+    re = RE(name='re1')
 
     random_vector = np.random.rand(3)
 
@@ -83,9 +83,9 @@ def test_re3_apply_and_inv():
     rotated_vector = re.apply(rotated_vector)
     assert np.array_equal(random_vector, rotated_vector)
 
-def test_re3_eq():
-    re1 = RE3(name='re1')
-    re2 = RE3(name='re2')
+def test_re_eq():
+    re1 = RE(name='re1')
+    re2 = RE(name='re2')
 
     re1.random()
     re2.from_quat(re1.as_quat())
