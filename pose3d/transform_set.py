@@ -38,7 +38,7 @@ class TransformSet:
         # Extract orientation
         orientation_value = frame_data['orientation']
         orientation_type = frame_data['orientation_type'].lower()
-        degrees = 'degree' in frame_data['orientation_untis'].lower()
+        degrees = 'degree' in frame_data['orientation_units'].lower()
 
         if orientation_type == 'euler':
             new_frame.orientation.from_euler('xyz', orientation_value, degrees=degrees)
