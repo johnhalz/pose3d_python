@@ -1,11 +1,11 @@
 [base]
-translation = [0.0, 0.0, 0.0]   # [m]
+position = [0.0, 0.0, 0.0]   # [m]
 orientation = [0.0, 0.0, 0.0]
 orientation_type = 'euler'
 orientation_units = 'degrees'
 
 [acp]
-translation = [0.0011, 0.0022, -0.1903]   # [m]
+position = [0.0011, 0.0022, -0.1903]   # [m]
 orientation = [-0.1, -0.1, -179.999]
 orientation_type = 'euler'
 orientation_units = 'degrees'
