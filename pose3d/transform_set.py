@@ -1,8 +1,5 @@
 import toml
 import numpy as np
-from scipy.spatial.transform import Rotation
-import logging as log
-import pandas as pd
 
 from .transform import Transform
 
@@ -18,8 +15,7 @@ class TransformSet:
             self.frame_names.append(frame_name)
 
         if 'base' not in self.frame_names:
-            log.error(f"TransformSet - No frame is marked as base frame. Please mark one of the frames as 'base'.")
-            return
+            raise ValueError(f"TransformSet - No frame is marked as base frame. Please mark one of the frames as 'base'.")
 
         # Convert dictionary parameters to a list of transformations
         self.transformations = []
@@ -33,9 +29,7 @@ class TransformSet:
             orientation_value = self.frame_data[frame_name]['orientation']
 
             if orientation_type not in valid_rotation_types:
-                log.error(
-                    f"TransformSet - Invalid rotation type: {orientation_type}. Rotation type must be: {valid_rotation_types}")
-                continue
+                raise ValueError(f'TransformSet - Invalid rotation type: {orientation_type}. Rotation type must be: {valid_rotation_types}')
             elif orientation_type == 'euler':
                 new_transf.rotation.from_euler('xyz', orientation_value, degrees=degree_opt)
             elif orientation_type == 'quaternion':
@@ -52,8 +46,9 @@ class TransformSet:
         '''
         Coordinate transformation of a pose (6D vector) from origin frame to target frame.
 
-        A compund transformation from origin frame (defined in `from_frame` argument) to the target frame (defined in
-        `to_frame` argument) is computed and applied to the input pose.
+        A compund transformation from origin frame (defined in `from_frame` argument) to
+        the target frame (defined in `to_frame` argument) is computed and applied to the
+        input pose.
 
         Args:
             input (np.ndarray): Input pose
@@ -67,22 +62,6 @@ class TransformSet:
         full_transf = self.__create_compound_transf(from_frame, to_frame)
 
         return full_transf.apply(input)
-
-
-    def df_change_frame(self, input: pd.DataFrame, from_frame: str, to_frame: str, rotation_type: str) -> pd.DataFrame:
-        '''Function to change frame of a list of poses in a pandas dataframe
-
-        Args:
-            input (pd.DataFrame): Input dataframe containing the list of poses
-            from_frame (str): Name of origin frame
-            to_frame (str): Name of target frame
-            rotation_type (str): Type of rotation (euler, quaternion, angle_axis, rodrigues)
-
-        Returns:
-            pd.DataFrame: Dataframe with rotated poses
-        '''
-
-        # TODO: Define how poses should be represented
 
 
     def wrench_change_frame(self, wrench: np.ndarray, from_frame: str, to_frame: str) -> np.ndarray:
@@ -102,8 +81,7 @@ class TransformSet:
         '''
         # Verify input
         if not np.array(wrench).shape == (6,):
-            log.error(f"TransformSet - Invalid wrench input. Shape must be (6,)")
-            return
+            raise ValueError(f"TransformSet - Invalid wrench input. Shape must be (6,)")
 
         # Create compound transformation
         full_transf = self.__create_compound_transf(from_frame, to_frame)
@@ -116,56 +94,6 @@ class TransformSet:
         force_at_dest = full_transf.rotation.apply(force_at_orig)
 
         return np.hstack([force_at_dest, torque_at_dest])
-
-
-    def wrench_df_change_frame(self, wrench_df: pd.DataFrame, from_frame: str, to_frame: str) -> pd.DataFrame:
-        '''
-        Function to perform coordinate transformation on wrench data in pandas dataframe. Returned dataframe
-        will have the same index, column names and dimensions as the input dataframe.
-
-        Dataframe must have 6 columns, where the first three represent the forces on x, y, z; and the
-        last three representing the torques on x, y, z (in that order).
-
-        Args:
-            wrench_df (pd.DataFrame): Pandas dataframe containing wrench data in original frame
-            from_frame (str): Name of origin frame
-            to_frame (str): Name of target frame
-
-        Returns:
-            pd.DataFrame: Dataframe containing wrench data in target frame (same index, column names and shape as input `wrench_df`)
-        '''
-        # Verify input
-        if wrench_df.shape[1] != 6:
-            log.error(
-                f'TransformSet - Invalid wrench input. Dataframe should have 6 columns (given {wrench_df.shape[1]})')
-            return
-
-        # Create transformation matrix
-        transf_mat = self.transform_matrix(from_frame=from_frame, to_frame=to_frame)
-
-        # Get column names from dataframe and create output dataframe
-        cols = wrench_df.columns
-        transf_wrench = pd.DataFrame(index=wrench_df.index, columns=cols)
-
-        # Compute unrotated moment
-        unrot_moment = pd.DataFrame(index=wrench_df.index, columns=['Tx', 'Ty', 'Tz'])
-        unrot_moment['Tx'] = wrench_df[cols[1]] * transf_mat[2, 3] - \
-            wrench_df[cols[2]] * transf_mat[1, 3] + wrench_df[cols[3]]
-        unrot_moment['Ty'] = wrench_df[cols[2]] * transf_mat[0, 3] - \
-            wrench_df[cols[0]] * transf_mat[2, 3] + wrench_df[cols[4]]
-        unrot_moment['Tz'] = wrench_df[cols[0]] * transf_mat[1, 3] - \
-            wrench_df[cols[1]] * transf_mat[0, 3] + wrench_df[cols[5]]
-
-        # Perform coordinate transformation
-        for i in range(len(cols)):
-            if i < 3:
-                transf_wrench[cols[i]] = transf_mat[i, 0]*wrench_df[cols[0]] + \
-                    transf_mat[i, 1]*wrench_df[cols[1]] + transf_mat[i, 2]*wrench_df[cols[2]]
-            else:
-                transf_wrench[cols[i]] = transf_mat[i-3, 0]*unrot_moment['Tx'] + \
-                    transf_mat[i-3, 1]*unrot_moment['Ty'] + transf_mat[i-3, 2]*unrot_moment['Tz']
-
-        return transf_wrench
 
 
     def transform_matrix(self, from_frame: str, to_frame: str, homogeneous: bool = True) -> np.ndarray:
@@ -188,7 +116,7 @@ class TransformSet:
         # Create compound transformation
         full_transf = self.__create_compound_transf(from_frame, to_frame)
 
-        return full_transf.matrix()
+        return full_transf.matrix(homogeneous=homogeneous)
 
 
     def __create_compound_transf(self, from_frame: str, to_frame: str) -> Transform:
@@ -206,8 +134,7 @@ class TransformSet:
         '''
         # Verify frame names
         if from_frame not in self.frame_names or to_frame not in self.frame_names:
-            log.error(f"TransformSet - Invalid frame name, names must be: {self.frame_names}")
-            return
+            raise ValueError(f"TransformSet - Invalid frame name, names must be: {self.frame_names}")
 
         # Create transform to base frame from orig_frame
         if from_frame == 'base':
@@ -224,9 +151,7 @@ class TransformSet:
 
         # Create compound transformation
         full_transformation = Transform(name=f"{from_frame}2{to_frame}", orig=from_frame, dest=to_frame)
-        full_transformation.translation = transf_to_base.rotation.apply(
-            transf_to_dest.translation) + transf_to_base.translation
-        full_transformation.rotation = Rotation.from_matrix(
-            np.matmul(transf_to_base.rotation.as_matrix(), transf_to_dest.rotation.as_matrix()))
+        full_transformation.translation = transf_to_base.rotation.apply(transf_to_dest.translation) + transf_to_base.translation
+        full_transformation.rotation.from_matrix(np.matmul(transf_to_base.rotation.as_matrix(), transf_to_dest.rotation.as_matrix()))
 
         return full_transformation
