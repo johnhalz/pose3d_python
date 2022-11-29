@@ -9,3 +9,5 @@ def valid_dim(input_dim: int) -> bool:
         
     else:
         return True
+
+VALID_ROTATION_TYPES = ['euler', 'quaternion', 'angle-axis', 'matrix', 'rodrigues']
