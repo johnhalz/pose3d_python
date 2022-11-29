@@ -1,5 +1,6 @@
 import toml
 import numpy as np
+from pathlib import Path
 
 from .utils import VALID_ROTATION_TYPES
 from .pose import Pose
@@ -7,10 +8,17 @@ from .transform import Transform
 
 
 class TransformSet:
-    def __init__(self, cfg_file: str) -> None:
+    def __init__(self, transf_set: str|Path|dict) -> None:
 
-        self.__frame_data = toml.load(cfg_file)
         self.frames = dict()
+        if isinstance(transf_set, str) or isinstance(transf_set, Path):
+            self.__frame_data = toml.load(transf_set)
+        elif isinstance(transf_set, dict):
+            self.__frame_data = transf_set
+
+        # Create dictionary of frames (from which we can create transformations)
+        for frame_name, frame_data in self.__frame_data.items():
+            self.add_frame(frame_name=frame_name, frame_data=frame_data)
 
         # Add base frame if not present
         if 'base' not in self.frame_names():
@@ -19,9 +27,6 @@ class TransformSet:
             base_frame.orientation.identity()
             self.frames['base'] = base_frame
         
-        # Create dictionary of frames (from which we can create transformations)
-        for frame_name, frame_data in self.__frame_data.items():
-            self.add_frame(frame_name=frame_name, frame_data=frame_data)
 
     # Setter functions
     def add_frame(self, frame_name: str, frame_data: dict) -> None:
