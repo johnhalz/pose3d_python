@@ -17,8 +17,8 @@ class Transform:
         # Init translation and orientation
         if valid_dim(dim):
             self.__dim = dim
-            self.translation = TE(dim=dim)
-            self.rotation = RE(dim=dim)
+            self.translation = TE(dim=self.__dim)
+            self.rotation = RE(dim=self.__dim)
 
     # Setter functions
     def between_poses(self, pose_1: Pose, pose_2: Pose):
@@ -31,16 +31,17 @@ class Transform:
             pose_1 (Pose): Origin pose.
             pose_2 (Pose): Destination pose.
         '''
-        if pose_1.__dim != pose_2.__dim:
+        pose_type = type(pose_1)
+        if len(pose_1.position.vector()) != len(pose_2.position.vector()):
             raise AttributeError(f'Number of dimensions between both poses do not match: pose_1.__dim = {pose_1.__dim} and pose_2.__dim = {pose_2.__dim}')
 
         # Modify dimension of transformation depending on pose_1 and pose_2
-        if pose_1.__dim != self.__dim:
-            self.__dim = pose_1.__dim
+        if pose_1.position.vector().shape != self.__dim:
+            self.__dim = len(pose_1.position.vector())
             self.rotation = RE(dim=self.__dim)
 
         # Compute rotation from pose_1 to pose_2
-        self.rotation.from_matrix(np.divide(pose_2.orientation.as_matrix(), pose_1.orientation.as_matrix()))
+        self.rotation.from_matrix(np.linalg.inv(pose_2.orientation.as_matrix()) * pose_1.orientation.as_matrix())
         self.translation.from_vector(pose_2.position.vector() - pose_1.position.vector())
 
 
@@ -62,9 +63,9 @@ class Transform:
 
         matrix = np.eye(self.__dim + 1)
         
-        if self.orig != self.dest:
+        if self.origin != self.destination:
             matrix[:self.__dim, :self.__dim] = self.rotation.as_matrix()
-            matrix[:self.__dim, self.__dim] = self.translation
+            matrix[:self.__dim, self.__dim] = self.translation.vector()
 
         if not homogeneous:
             return matrix[:self.__dim, :]
