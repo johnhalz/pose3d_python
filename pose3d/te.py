@@ -3,7 +3,7 @@ import numpy as np
 from .utils import valid_dim
 
 class TE:
-    def __init__(self, name: str ='', dim: int = 3, vector: np.ndarray = None) -> None:
+    def __init__(self, name: str ='', dim: int = 3, vector: np.ndarray|list = None) -> None:
         self.name = name
 
         if valid_dim(dim):
@@ -14,13 +14,14 @@ class TE:
         else:
             if valid_dim(len(vector)):
                 self.__dim = len(vector)
-                self.__vector = vector
+                self.__vector = np.array(vector)
 
     # Setter functions
     def random(self) -> None:
         self.from_vector(np.random.rand(self.__dim))
 
-    def from_vector(self, vector: np.ndarray) -> None:
+    def from_vector(self, vector: np.ndarray|list) -> None:
+        vector = np.array(vector)
         if vector.shape == self.__vector.shape:
             self.__vector = vector
 

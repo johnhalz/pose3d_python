@@ -20,19 +20,22 @@ class RE:
     def random(self):
         self.__rotation = Rotation.random()
 
-    def from_quat(self, quat: np.ndarray) -> None:
+    def from_quat(self, quat: np.ndarray|list) -> None:
         if self.__dim == 2:
             raise AttributeError(f'Unable to set 2D rotation from quaternion input.')
 
-        self.__rotation = Rotation.from_quat(quat)
+        if len(quat) != 4:
+            raise AttributeError(f'Input vector shape must be equal to 4 (input shape: {len(quat)}).')
+
+        self.__rotation = Rotation.from_quat(np.array(quat))
 
     def from_matrix(self, matrix: np.ndarray) -> None:
         if matrix.shape != (self.__dim, self.__dim):
             raise ValueError(f'Input matrix shape must be ({self.__dim}, {self.__dim}) when rotation dimension is {self.__dim}. Current input matrix shape: {matrix.shape}.')
 
         if self.__dim == 2:
-            matrix = np.hstack(matrix, np.zeros(2))
-            matrix = np.vstack(matrix, [0, 0, 1])
+            matrix = np.hstack(np.array(matrix), np.zeros(2))
+            matrix = np.vstack(np.array(matrix), [0, 0, 1])
         
         self.__rotation = Rotation.from_matrix(matrix)
 
@@ -40,15 +43,18 @@ class RE:
         if self.__dim == 2:
             raise AttributeError(f'Unable to set 2D rotation from angle-axis input.')
 
-        self.__rotation = Rotation.from_rotvec(angle_axis)
+        if len(angle_axis) != 3:
+            raise AttributeError(f'Input vector shape must be equal to 3 (input shape: {len(angle_axis)}).')
 
-    def from_euler(self, sequence: str = None, angles: list = None, degrees: bool = True) -> None:
+        self.__rotation = Rotation.from_rotvec(np.array(angle_axis))
+
+    def from_euler(self, sequence: str = None, angles: np.ndarray|list = None, degrees: bool = True) -> None:
         if self.__dim == 3:
             self.__rotation = Rotation.from_euler(sequence, angles, degrees)
 
         # TODO: Verify functionality with test
         elif self.__dim == 2:
-            self.__rotation = Rotation.from_euler('z', angles, degrees)
+            self.__rotation = Rotation.from_euler('z', np.array(angles), degrees)
 
     # Getter functions
     def as_quat(self) -> np.ndarray:
@@ -115,9 +121,9 @@ class RE:
     # Computation functions
     def apply(self, input):
         # Check shape of input
+        input = np.array(input)
         if input.shape[0] != self.__dim:
             raise ValueError(f'Input shape mismatch: self.__dim ({self.__dim}) != input.shape ({input.shape[0]})')
-        
         
         return self.__rotation.apply(input)
 
