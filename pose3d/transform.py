@@ -11,6 +11,8 @@ class Transform:
     def __init__(self, name: str, orig: str = 'origin', dest: str = 'destination', dim: int = 3) -> None:
         # Set strings
         self.name = name
+        self.origin = orig
+        self.destination = dest
 
         # Init translation and orientation
         if valid_dim(dim):
@@ -40,14 +42,16 @@ class Transform:
         # Compute rotation from pose_1 to pose_2
         self.rotation.from_matrix(np.divide(pose_2.orientation.as_matrix(), pose_1.orientation.as_matrix()))
         self.translation.from_vector(pose_2.position.vector() - pose_1.position.vector())
+
+
+    def identity(self) -> None:
+        self.translation.zero()
+        self.rotation.identity()
         
 
     def inv(self):
-        inv_transform = Transform(name=f"{self.name} (Inverse)")
-        inv_transform.rotation = self.rotation.inv()
-        inv_transform.translation.from_vector(-inv_transform.rotation.apply(self.translation.vector()))
-
-        return inv_transform
+        self.rotation = self.rotation.inv()
+        self.translation.from_vector(-self.rotation.apply(self.translation.vector()))
 
     def random(self):
         self.translation.random()
@@ -69,7 +73,6 @@ class Transform:
 
     # Computation functions
     def apply(self, io):
-        
         # If io is pose
         if isinstance(io, Pose):
             io.orientation.from_matrix(np.matmul(self.rotation.as_matrix(), io.orientation.as_matrix()))

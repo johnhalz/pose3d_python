@@ -2,45 +2,57 @@ import toml
 import numpy as np
 
 from .utils import VALID_ROTATION_TYPES
+from .pose import Pose
 from .transform import Transform
 
 
 class TransformSet:
     def __init__(self, cfg_file: str) -> None:
 
-        self.frame_data = toml.load(cfg_file)
+        self.__frame_data = toml.load(cfg_file)
+        self.frames = dict()
 
-        # Save names of transforms
-        self.frame_names = []
-        for frame_name in self.frame_data.keys():
-            self.frame_names.append(frame_name)
+        # Add base frame if not present
+        if 'base' not in self.frame_names():
+            base_frame = Pose(name='base')
+            base_frame.position.zero()
+            base_frame.orientation.identity()
+            self.frames['base'] = base_frame
+        
+        # Create dictionary of frames (from which we can create transformations)
+        for frame_name, frame_data in self.__frame_data.items():
+            self.add_frame(frame_name=frame_name, frame_data=frame_data)
 
-        if 'base' not in self.frame_names:
-            raise ValueError(f"TransformSet - No frame is marked as base frame. Please mark one of the frames as 'base'.")
+    # Setter functions
+    def add_frame(self, frame_name: str, frame_data: dict) -> None:
+        new_frame = Pose(name=frame_name)
 
-        # Convert dictionary parameters to a list of transformations
-        self.transformations = []
-        valid_rotation_types = ['euler', 'quaternion', 'angle-axis', 'matrix', 'rodrigues']
-        for frame_name in self.frame_data.keys():
-            new_transf = Transform(name=frame_name, orig='base', dest=frame_name)
-            new_transf.translation = self.frame_data[frame_name]['translation']
+        # Extract position
+        new_frame.position.from_vector(frame_data['position'])
 
-            degree_opt = 'degree' in self.frame_data[frame_name]['orientation_units']
-            orientation_type = self.frame_data[frame_name]['orientation_type']
-            orientation_value = self.frame_data[frame_name]['orientation']
+        # Extract orientation
+        orientation_value = frame_data['orientation']
+        orientation_type = frame_data['orientation_type'].lower()
+        degrees = 'degree' in frame_data['orientation_untis'].lower()
 
-            if orientation_type not in valid_rotation_types:
-                raise ValueError(f'TransformSet - Invalid rotation type: {orientation_type}. Rotation type must be: {valid_rotation_types}')
-            elif orientation_type == 'euler':
-                new_transf.rotation.from_euler('xyz', orientation_value, degrees=degree_opt)
-            elif orientation_type == 'quaternion':
-                new_transf.rotation.from_quat(orientation_value)
-            elif orientation_type == 'angle-axis':
-                new_transf.rotation.from_angle_axis(orientation_value)
-            elif orientation_type == 'matrix':
-                new_transf.rotation.from_matrix(orientation_value)
+        if orientation_type == 'euler':
+            new_frame.orientation.from_euler('xyz', orientation_value, degrees=degrees)
+        elif orientation_type == 'quaternion':
+            new_frame.rotation.from_quat(orientation_value)
+        elif orientation_type == 'angle-axis':
+            new_frame.rotation.from_angle_axis(orientation_value)
+        elif orientation_type == 'matrix':
+            new_frame.rotation.from_matrix(orientation_value)
+        else:
+            raise ValueError(f'TransformSet - Invalid rotation type: {orientation_type}. Rotation type must be: {VALID_ROTATION_TYPES}')
 
-            self.transformations.append(new_transf)
+        # Save new frame to self.frames
+        self.frames[frame_name] = new_frame
+
+
+    # Getter functions
+    def frame_names(self) -> list:
+        return self.frames.keys()
 
 
     def change_frame(self, input, from_frame: str, to_frame: str) -> np.ndarray:
@@ -60,9 +72,9 @@ class TransformSet:
             np.ndarray: Transformed pose in target frame.
         '''
         # Create compound transformation
-        full_transf = self.__create_compound_transf(from_frame, to_frame)
+        transformation = self.__create_compound_transf(from_frame=from_frame, to_frame=to_frame)
 
-        return full_transf.apply(input)
+        return transformation.apply(input)
 
 
     def wrench_change_frame(self, wrench: np.ndarray, from_frame: str, to_frame: str) -> np.ndarray:
@@ -85,14 +97,14 @@ class TransformSet:
             raise ValueError(f"TransformSet - Invalid wrench input. Shape must be (6,)")
 
         # Create compound transformation
-        full_transf = self.__create_compound_transf(from_frame, to_frame)
+        transformation = self.__create_compound_transf(from_frame=from_frame, to_frame=to_frame)
 
         # Transform wrench
         force_at_orig = wrench[:3]
         torque_at_orig = wrench[3:]
 
-        torque_at_dest = full_transf.rotation.apply(np.cross(force_at_orig, full_transf.translation) + torque_at_orig)
-        force_at_dest = full_transf.rotation.apply(force_at_orig)
+        torque_at_dest = transformation.rotation.apply(np.cross(force_at_orig, transformation.translation) + torque_at_orig)
+        force_at_dest = transformation.rotation.apply(force_at_orig)
 
         return np.hstack([force_at_dest, torque_at_dest])
 
@@ -127,32 +139,13 @@ class TransformSet:
         The function will create a transformation from one frame to another by 
 
         Args:
-            from_frame (str): _description_
-            to_frame (str): _description_
+            from_frame (str): Name of origin frame
+            to_frame (str): Name of destination frame
 
         Returns:
-            Transform: _description_
+            Transform: Transform object
         '''
-        # Verify frame names
-        if from_frame not in self.frame_names or to_frame not in self.frame_names:
-            raise ValueError(f"TransformSet - Invalid frame name, names must be: {self.frame_names}")
+        transformation = Transform(name=f'{from_frame}2{to_frame}', orig=from_frame, dest=to_frame)
+        transformation.between_poses(pose_1=self.frames[from_frame], pose_2=self.frames[to_frame])
 
-        # Create transform to base frame from orig_frame
-        if from_frame == 'base':
-            transf_to_base = Transform(name="orig_is_base", orig='base', dest='base')
-        else:
-            orig_transf = self.transformations[self.frame_names.index(from_frame)]
-            transf_to_base = orig_transf.inv()
-
-        # Create transform from base frame from dest_frame
-        if to_frame == 'base':
-            transf_to_dest = Transform(name="dest_is_base", orig='base', dest='base')
-        else:
-            transf_to_dest = self.transformations[self.frame_names.index(to_frame)]
-
-        # Create compound transformation
-        full_transformation = Transform(name=f"{from_frame}2{to_frame}", orig=from_frame, dest=to_frame)
-        full_transformation.translation = transf_to_base.rotation.apply(transf_to_dest.translation) + transf_to_base.translation
-        full_transformation.rotation.from_matrix(np.matmul(transf_to_base.rotation.as_matrix(), transf_to_dest.rotation.as_matrix()))
-
-        return full_transformation
+        return transformation
