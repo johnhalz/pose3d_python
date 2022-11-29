@@ -6,6 +6,7 @@ class RE:
     def __init__(self, name: str = '', dim: int = 3) -> None:
         self.name = name
         self.__rotation = Rotation(quat=[0, 0, 0, 1])
+        self.identity()
 
         if valid_dim(dim):
             self.__dim = dim
