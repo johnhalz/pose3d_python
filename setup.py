@@ -1,7 +1,7 @@
 from pathlib import Path
 from setuptools import setup, find_packages
 
-VERSION = '2.0.1'
+VERSION = '2.0.2'
 DESCRIPTION = 'Transforming and handling 3D poses and frames.'
 
 # Read the contents of README file
