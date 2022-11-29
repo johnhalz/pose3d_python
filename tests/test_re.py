@@ -95,4 +95,3 @@ def test_re_eq():
     re2.random()
 
     assert re1 != re2
-
