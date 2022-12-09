@@ -12,6 +12,10 @@ class TransformSet:
 
         self.frames = dict()
         if isinstance(transf_set, str) or isinstance(transf_set, Path):
+            path = Path(transf_set)
+            if not path.exists():
+                raise ValueError(f'Input path ({path.as_posix()}) not found or does not exist.')
+
             self.__frame_data = toml.load(transf_set)
         elif isinstance(transf_set, dict):
             self.__frame_data = transf_set
