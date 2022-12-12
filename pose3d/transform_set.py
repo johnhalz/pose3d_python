@@ -32,35 +32,58 @@ class TransformSet:
             self.frames['base'] = base_frame
         
 
-    # Setter functions
-    def add_frame(self, frame_name: str, frame_data: dict) -> None:
-        new_frame = Pose(name=frame_name)
+    # Setter methods
+    def add_frame(self, frame_name: str, frame_data: dict|Pose) -> None:
+        '''
+        Add frame to transform set.
 
-        # Extract position
-        new_frame.position.from_vector(frame_data['position'])
+        Parameters
+        ----------
+        - `frame_name` (`str`): Name of new frame
+        - `frame_data` (`dict | Pose`): Data of frame
+        '''
+        if frame_name == '' or frame_name in self.frame_names():
+            raise ValueError(f"Invalid pose name {frame_name}. Please use a different name.")
 
-        # Extract orientation
-        orientation_value = frame_data['orientation']
-        orientation_type = frame_data['orientation_type'].lower()
-        degrees = 'degree' in frame_data['orientation_units'].lower()
+        if isinstance(frame_data, Pose):
+            new_frame = frame_data
+            new_frame.name = frame_name
 
-        if orientation_type == 'euler':
-            new_frame.orientation.from_euler('xyz', orientation_value, degrees=degrees)
-        elif orientation_type == 'quaternion':
-            new_frame.rotation.from_quat(orientation_value)
-        elif orientation_type == 'angle-axis':
-            new_frame.rotation.from_angle_axis(orientation_value)
-        elif orientation_type == 'matrix':
-            new_frame.rotation.from_matrix(orientation_value)
-        else:
-            raise ValueError(f'TransformSet - Invalid rotation type: {orientation_type}. Rotation type must be: {VALID_ROTATION_TYPES}')
+        elif isinstance(frame_data, dict):
+            new_frame = Pose(name=frame_name)
+
+            # Extract position
+            new_frame.position.from_vector(frame_data['position'])
+
+            # Extract orientation
+            orientation_value = frame_data['orientation']
+            orientation_type = frame_data['orientation_type'].lower()
+            degrees = 'degree' in frame_data['orientation_units'].lower()
+
+            if orientation_type == 'euler':
+                new_frame.orientation.from_euler('xyz', orientation_value, degrees=degrees)
+            elif orientation_type == 'quaternion':
+                new_frame.rotation.from_quat(orientation_value)
+            elif orientation_type == 'angle-axis':
+                new_frame.rotation.from_angle_axis(orientation_value)
+            elif orientation_type == 'matrix':
+                new_frame.rotation.from_matrix(orientation_value)
+            else:
+                raise ValueError(f'TransformSet - Invalid rotation type: {orientation_type}. Rotation type must be: {VALID_ROTATION_TYPES}')
 
         # Save new frame to self.frames
         self.frames[frame_name] = new_frame
 
 
-    # Getter functions
+    # Getter methods
     def frame_names(self) -> list:
+        '''
+        Return list of frame names.
+
+        Returns
+        -------
+        - `list`: List of saved frame names
+        '''
         return self.frames.keys()
 
 
@@ -72,13 +95,15 @@ class TransformSet:
         the target frame (defined in `to_frame` argument) is computed and applied to the
         input pose.
 
-        Args:
-            input (np.ndarray): Input pose
-            from_frame (str): Name of origin frame
-            to_frame (str): Name of target frame
+        Parameters
+        ----------
+        - `input` (`np.ndarray`): Input pose
+        - `from_frame` (`str`): Name of origin frame
+        - `to_frame` (`str`): Name of target frame
 
-        Returns:
-            np.ndarray: Transformed pose in target frame.
+        Returns
+        -------
+        - `np.ndarray`: Transformed pose in target frame
         '''
         # Create compound transformation
         transformation = self.__create_compound_transf(from_frame=from_frame, to_frame=to_frame)
@@ -88,18 +113,20 @@ class TransformSet:
 
     def wrench_change_frame(self, wrench: np.ndarray, from_frame: str, to_frame: str) -> np.ndarray:
         '''
-        Function to change frame of wrench vector.
+        Method to change frame of wrench vector.
 
-        Function will perform simple rotation on forces (first three elements), and
+        Method will perform simple rotation on forces (first three elements), and
         will rotate the total moments on the origin frame.
 
-        Args:
-            wrench (np.ndarray): Input wrench array
-            from_frame (str): Name of origin frame
-            to_frame (str): Name of target frame
+        Parameters
+        ----------
+        - `wrench` (`np.ndarray`): Input wrench array
+        - `from_frame` (`str`): Name of origin frame
+        - `to_frame` (`str`): Name of target frame
 
-        Returns:
-            np.ndarray: Transformed wrench array
+        Returns
+        -------
+        - `np.ndarray`: Transformed wrench array
         '''
         # Verify input
         if not np.array(wrench).shape == (6,):
@@ -123,17 +150,19 @@ class TransformSet:
         Return the transformation matrix to transform poses from origin
         frame to destination frame.
 
-        Function will call the `__create_compound_transf()` function. Note that such a matrix
+        Method will call the `__create_compound_transf()` method. Note that such a matrix
         can only be directly used for poses. Other calculations are required for wrench
         transformations.
 
-        Args:
-            from_frame (str): Name of origin frame
-            to_frame (str): Name of target frame
-            homogeneous (bool, optional): Option if matrix should be homogenous or not (3x4 or 4x4). Defaults to True.
+        Parameters
+        ----------
+        - `from_frame` (`str`): Name of origin frame
+        - `to_frame` (`str`): Name of target frame
+        - `homogeneous` (`bool`): Option if matrix should be homogenous or not (3x4 or 4x4) (default: `True`)
 
-        Returns:
-            np.ndarray: Numpy matrix
+        Returns
+        -------
+        - `np.ndarray`: Numpy matrix
         '''
         # Create compound transformation
         full_transf = self.__create_compound_transf(from_frame, to_frame)
@@ -143,16 +172,16 @@ class TransformSet:
 
     def __create_compound_transf(self, from_frame: str, to_frame: str) -> Transform:
         '''
-        Function to create compound transform between two frames.
+        Method to create compound transform between two frames.
 
-        The function will create a transformation from one frame to another by 
+        Parameters
+        ----------
+        - `from_frame` (`str`): Name of origin frame
+        - `to_frame` (`str`): Name of destination frame
 
-        Args:
-            from_frame (str): Name of origin frame
-            to_frame (str): Name of destination frame
-
-        Returns:
-            Transform: Transform object
+        Returns
+        -------
+        - `Transform`: Transform object
         '''
         transformation = Transform(name=f'{from_frame}2{to_frame}', orig=from_frame, dest=to_frame)
         transformation.between_poses(pose_1=self.frames[from_frame], pose_2=self.frames[to_frame])
