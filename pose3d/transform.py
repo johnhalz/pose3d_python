@@ -99,6 +99,18 @@ class Transform:
 
     # Computation functions
     def apply(self, io: Pose|np.ndarray) -> Pose|np.ndarray:
+        '''
+        Apply transformation to `io`.
+
+        Parameters
+        ----------
+        - `io` (`Pose | np.ndarray`): Element to apply transformation to
+
+        Returns
+        -------
+        - `Pose|np.ndarray`: Output pose/vector
+        '''
+
         # If io is a Pose
         if isinstance(io, Pose):
             io.orientation.from_matrix(np.matmul(self.rotation.as_matrix(), io.orientation.as_matrix()))
