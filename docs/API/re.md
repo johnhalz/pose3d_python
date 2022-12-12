@@ -10,7 +10,7 @@ This page covers the Euclidean Rotation (`RE`) class. This class is meant to rep
 
 - ### `__init__(self, name: str = '', dim: int = 3) -> None`
 
-    The `__init__` function is called when a new instance of the `RE` class is created. It initializes all of the variables in the class and sets them to their default values.
+    The `__init__` method is called when a new instance of the `RE` class is created. It initializes all of the variables in the class and sets them to their default values.
 
     By default, the `self.__rotation` member value is set to an identity value.
     
@@ -21,7 +21,7 @@ This page covers the Euclidean Rotation (`RE`) class. This class is meant to rep
 
 - ### `identity(self, ) -> None`
 
-    The `identity` function sets the `self.__rotation` member to the equivalent of an identity matrix.
+    The `identity` method sets the `self.__rotation` member to the equivalent of an identity matrix.
 
     ``` py title="Example"
     new_rotation = RE()
@@ -30,7 +30,7 @@ This page covers the Euclidean Rotation (`RE`) class. This class is meant to rep
 
 - ### `random(self, ) -> None`
 
-    The `random` function sets the `self.__rotation` member to a random value.
+    The `random` method sets the `self.__rotation` member to a random value.
 
     ``` py title="Example"
     new_rotation = RE()
@@ -39,7 +39,7 @@ This page covers the Euclidean Rotation (`RE`) class. This class is meant to rep
 
 - ### `inv(self, ) -> None`
 
-    The `inv` function sets the `self.__rotation` member to its inverse.
+    The `inv` method sets the `self.__rotation` member to its inverse.
 
     ``` py title="Example"
     new_rotation = RE()
@@ -49,9 +49,9 @@ This page covers the Euclidean Rotation (`RE`) class. This class is meant to rep
 
 - ### `from_quat(self, quat: np.ndarray|list) -> None`
 
-    The `from_quat` function set the `self.__rotation` member from the value of the input `quat`.
+    The `from_quat` method set the `self.__rotation` member from the value of the input `quat`.
 
-    **Note:** This function will not work for `RE` objects that are defined in 2D space.
+    **Note:** This method will not work for `RE` objects that are defined in 2D space.
 
     **Parameters**
 
@@ -64,7 +64,7 @@ This page covers the Euclidean Rotation (`RE`) class. This class is meant to rep
 
 - ### `from_matrix(self, matrix: np.ndarray) -> None`
 
-    The `from_matrix` function set the `self.__rotation` member from the value of the input `matrix`. The function will first check whether the input matrix dimensions are suitable for the number of dimensions set for the `RE` object.
+    The `from_matrix` method set the `self.__rotation` member from the value of the input `matrix`. The method will first check whether the input matrix dimensions are suitable for the number of dimensions set for the `RE` object.
 
     **Parameters**
 
@@ -80,9 +80,9 @@ This page covers the Euclidean Rotation (`RE`) class. This class is meant to rep
 
 - ### `from_angle_axis(self, angle_axis: np.ndarray) -> None`
 
-    The `from_angle_axis` function set the `self.__rotation` member from the value of the input `angle_axis`.
+    The `from_angle_axis` method set the `self.__rotation` member from the value of the input `angle_axis`.
     
-    **Note:** This function will not work for `RE` objects that are defined in 2D space.
+    **Note:** This method will not work for `RE` objects that are defined in 2D space.
 
     **Parameters**
 
@@ -96,7 +96,7 @@ This page covers the Euclidean Rotation (`RE`) class. This class is meant to rep
 
 - ### `from_euler(self, sequence: str = None, angles: np.ndarray|list = None, degrees: bool = True) -> None`
 
-    The `from_euler` function set the `self.__rotation` member from the value(s) of the inputs `sequence` and `angles`. The angle will be converted from degrees to radians if `degrees` is `True`.
+    The `from_euler` method set the `self.__rotation` member from the value(s) of the inputs `sequence` and `angles`. The angle will be converted from degrees to radians if `degrees` is `True`.
 
     **Parameters**
 
@@ -180,7 +180,7 @@ This page covers the Euclidean Rotation (`RE`) class. This class is meant to rep
 
     Return rotation angle around the z axis.
 
-    **Note:** This function will not work for 2D rotations. It is recommended to use `as_euler()` instead.
+    **Note:** This method will not work for 2D rotations. It is recommended to use `as_euler()` instead.
 
     **Parameters**
 
@@ -200,7 +200,7 @@ This page covers the Euclidean Rotation (`RE`) class. This class is meant to rep
 
     Return rotation angle around the y axis.
 
-    **Note:** This function will not work for 2D rotations. It is recommended to use `as_euler()` instead.
+    **Note:** This method will not work for 2D rotations. It is recommended to use `as_euler()` instead.
 
     **Parameters**
 
@@ -220,7 +220,7 @@ This page covers the Euclidean Rotation (`RE`) class. This class is meant to rep
 
     Return rotation angle around the x axis.
 
-    **Note:** This function will not work for 2D rotations. It is recommended to use `as_euler()` instead.
+    **Note:** This method will not work for 2D rotations. It is recommended to use `as_euler()` instead.
 
     **Parameters**
 
@@ -238,7 +238,7 @@ This page covers the Euclidean Rotation (`RE`) class. This class is meant to rep
 
 - ### `apply(self, input: np.ndarray|list) -> np.ndarray`
 
-    The `apply` function applies this rotation to `input` vector.
+    The `apply` method applies this rotation to `input` vector.
 
     **Note:** The dimension of the input vector must match the set dimension of the `RE` object.
 

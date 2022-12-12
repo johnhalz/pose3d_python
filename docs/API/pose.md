@@ -10,7 +10,7 @@ This page covers the `Pose` class. In this documentation, a pose is defined as a
 
 - ### `__init__(self, name: str = '', dim: int = 3) -> None`
 
-    The `__init__` function is called when a new instance of the `Pose` class is created.
+    The `__init__` method is called when a new instance of the `Pose` class is created.
     It initializes all of the variables in the class and sets them to their default values.
     
     **Parameters**

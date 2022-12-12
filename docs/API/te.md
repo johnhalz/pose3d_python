@@ -10,7 +10,7 @@ This page covers the Euclidean Translation (`TE`) class. This class is meant to 
 
 - ### `__init__(self, name: str = '', dim: int = 3, vector: np.ndarray|list = None) -> None`
 
-    The `__init__` function is called when a new instance of the `TE` class is created. It initializes all of the variables in the class and sets them to their default values.
+    The `__init__` method is called when a new instance of the `TE` class is created. It initializes all of the variables in the class and sets them to their default values.
 
     By default, the `self.__vector` member value is set to zero.
     
@@ -22,7 +22,7 @@ This page covers the Euclidean Translation (`TE`) class. This class is meant to 
 
 - ### `random(self) -> None`
 
-    The `random` function sets the `self.__vector` member to a random state.
+    The `random` method sets the `self.__vector` member to a random state.
 
     ``` py title="Example"
     new_position = TE()
@@ -31,9 +31,9 @@ This page covers the Euclidean Translation (`TE`) class. This class is meant to 
 
 - ### `from_vector(self, vector: np.ndarray|list) -> None`
 
-    The `from_vector` function sets the `self.__vector` to the input vector.
+    The `from_vector` method sets the `self.__vector` to the input vector.
 
-    The function also checks whether the input dimension matches the class dimension.
+    The method also checks whether the input dimension matches the class dimension.
 
     **Parameters**
 
@@ -46,7 +46,7 @@ This page covers the Euclidean Translation (`TE`) class. This class is meant to 
 
 - ### `zero(self) -> None`
 
-    The `zero` function sets the `self.__vector` to zero.
+    The `zero` method sets the `self.__vector` to zero.
 
     ``` py title="Example"
     new_position = TE()
@@ -56,7 +56,7 @@ This page covers the Euclidean Translation (`TE`) class. This class is meant to 
 
 - ### `inv(self) -> None`
 
-    The `inv` function sets the `self.__vector` member to its inverse (negative value).
+    The `inv` method sets the `self.__vector` member to its inverse (negative value).
 
     ``` py title="Example"
     new_position = TE()
@@ -110,7 +110,7 @@ This page covers the Euclidean Translation (`TE`) class. This class is meant to 
 
     Return the third element of the `self.__vector` member.
 
-    **Note:** This function will only work for `TE` classes set to 3 dimensions.
+    **Note:** This method will only work for `TE` classes set to 3 dimensions.
 
     **Returns**
 
