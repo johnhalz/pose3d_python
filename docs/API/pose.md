@@ -1,36 +1,53 @@
 # Pose Class
 
-This page covers the `Pose` and `Pose2D` class. For the 3D `Pose` class, this class is a wrapper around the following:
+## Description
 
-- `scipy.spatial.transform.Rotation` [Documentation Link](https://docs.scipy.org/doc/scipy/reference/generated/scipy.spatial.transform.Rotation.html)
-- `numpy.array` [Documentation Link](https://numpy.org/doc/stable/reference/generated/numpy.array.html)
+This page covers the `Pose` class. In this documentation, a pose is defined as a description of the position *and* the orientation of an object, and can exist in 2D or 3D. Hence, the `Pose` class allows the user to handle a position and orientation in 2D or 3D, by making use of the `TE` and `RE` classes set to the respective number of dimensions.
 
-The 2D `Pose2D` class is a wrapper around the following:
-
-- `pose_python.Rotation2D`
-- `numpy.array` [Documentation Link](https://numpy.org/doc/stable/reference/generated/numpy.array.html)
-
-The documentation for these classes can be found by clicking on their respective links.
-
-## Member Variables
-
-| Name | Type | Description |
-| :--: | :--: | :---------- |
-| `name` | `str` | String to hold the name of the pose. This variable must be set when a new instance of the class is created. |
-| `position` | `numpy.ndarray` | 3D array meant to to hold the position element of the pose. |
-| `orientation` | `scipy.spatial.transform.Rotation` | Rotation element meant to hold the orientation of the pose. |
+-------------------------
 
 ## Class Methods
 
-| Name | Description |
-| :--: | :---------- |
-| `__init__` | Constructor function: Requires name to be set, will set the position to [0, 0, 0] and the rotation to identity. |
-| `print` | Print the elements of the pose to the console (will print the rotation in euler angles). |
-| `random` | Set the position and rotation to random (mostly used for testing purposes). |
+- ### `__init__(self, name: str = '', dim: int = 3) -> None`
 
-## Requirements
+    The `__init__` function is called when a new instance of the `Pose` class is created.
+    It initializes all of the variables in the class and sets them to their default values.
+    
+    **Parameters**
+    
+    - `name` (`str`): Set the name of the object (default: '')
+    - `dim` (`int`): Set the dimension of the vector (default: 3)
 
-| Name | Description | Code Link | Documentation Link |
-| :--: | :---------- | :-------: | :----------------: |
-| `numpy` | The fundamental package for scientific computing with Python | <https://github.com/numpy/numpy> | <https://numpy.org/doc/> |
-| `scipy` | General management of scientific data | <https://github.com/scipy/scipy> | <https://docs.scipy.org/doc/scipy-1.8.1/> |
+- ### `random(self) -> None`
+
+    Sets the position and orientation to random values.
+
+    ``` py title="Example"
+    new_pose = Pose()
+    new_pose.random()
+    ```
+
+- ### `zero(self) -> None`
+
+    Sets the position vector to zero and orientation to identity.
+
+    ``` py title="Example"
+    new_pose = Pose()
+    new_pose.zero()
+    ```
+
+-------------------------
+
+## Value Extraction
+
+To extract the raw values of the position and orientation, it is recommended to go through the `RE` and `TE` members.
+
+``` py title="Example"
+new_pose = Pose()
+new_pose.random()
+
+yaw_angle = new_pose.orientation.yaw()          # Get yaw angle
+position_vector = new_pose.position.vector()    # Get position vector
+```
+
+Refer to the documentation of the `RE` and `TE` classes to become familiar with their methods.
