@@ -9,7 +9,7 @@ class RE:
         It initializes all of the variables in the class and sets them to their default values.
 
         By default, the `self.__rotation` member value is set to an identity value.
-        
+
         Parameters
         ----------
         - `name` (`str`): Set the name of the object (default: '')
@@ -77,14 +77,14 @@ class RE:
         if self.__dim == 2:
             matrix = np.hstack(np.array(matrix), np.zeros(2))
             matrix = np.vstack(np.array(matrix), [0, 0, 1])
-        
+
         self.__rotation = Rotation.from_matrix(matrix)
 
     def from_angle_axis(self, angle_axis: np.ndarray) -> None:
         '''
         The `from_angle_axis` function set the `self.__rotation` member from the value of
         the input `angle_axis`.
-        
+
         Note: This function will not work for `RE` objects that are defined in 2D space.
 
         Parameters
@@ -133,7 +133,7 @@ class RE:
         - `int`: Value of `self.__dim` member
         '''
         return self.__dim
-        
+
     def as_quat(self) -> np.ndarray:
         '''
         Return the stored `self.__rotation` member in quaternion form.
@@ -263,7 +263,7 @@ class RE:
         # Check shape of input
         if input.shape[0] != self.__dim:
             raise ValueError(f'Input shape mismatch: self.__dim ({self.__dim}) != input.shape ({input.shape[0]})')
-        
+
         return self.__rotation.apply(input)
 
     # Operator overloading
