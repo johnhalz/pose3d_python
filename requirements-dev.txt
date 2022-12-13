@@ -1,0 +1,10 @@
+numpy
+scipy
+pandas
+toml
+
+# Package deployment
+twine
+
+# Documentation website
+mkdocs-material
