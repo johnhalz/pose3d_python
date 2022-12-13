@@ -2,7 +2,7 @@ import numpy as np
 
 from .utils import valid_dim
 
-class TE:
+class ET:
     def __init__(self, name: str = '', dim: int = 3, vector: np.ndarray|list = None) -> None:
         '''
         The `__init__` function is called when a new instance of the `TE` class is created.
@@ -124,35 +124,35 @@ class TE:
         return f'{self.vector()}'
 
     def __add__(self, other):
-        if isinstance(other, TE):
+        if isinstance(other, ET):
             if other.vector().shape == self.vector().shape:
-                return TE(name=f'Sum of {self.name} and {other.name}',
+                return ET(name=f'Sum of {self.name} and {other.name}',
                           vector=self.vector() + other.vector())
 
         elif isinstance(other, np.ndarray):
             if other.shape == self.vector().shape:
-                return TE(name=self.name,
+                return ET(name=self.name,
                            vector=self.vector() + other)
 
         else:
             raise TypeError(f'Input parameter is {type(other)}, not TE or np.ndarray as expected.')
 
     def __sub__(self, other):
-        if isinstance(other, TE):
+        if isinstance(other, ET):
             if other.vector().shape == self.vector().shape:
-                return TE(name=f'Sum of {self.name} and {other.name}',
+                return ET(name=f'Sum of {self.name} and {other.name}',
                           vector=self.vector() - other.vector())
 
         elif isinstance(other, np.ndarray):
             if other.shape == self.vector().shape:
-                return TE(name=self.name,
+                return ET(name=self.name,
                            vector=self.vector() - other)
 
         else:
             raise TypeError(f'Input parameter is {type(other)}, not TE or np.ndarray as expected.')
 
     def __iadd__(self, other):
-        if isinstance(other, TE):
+        if isinstance(other, ET):
             if other.vector().shape == self.vector().shape:
                 self.from_vector(self.vector() + other.vector())
 
@@ -164,7 +164,7 @@ class TE:
             raise TypeError(f'Input parameter is {type(other)}, not TE or np.ndarray as expected.')
 
     def __isub__(self, other):
-        if isinstance(other, TE):
+        if isinstance(other, ET):
             if other.vector().shape == self.vector().shape:
                 self.from_vector(self.vector() - other.vector())
 
@@ -176,7 +176,7 @@ class TE:
             raise TypeError(f'Input parameter is {type(other)}, not TE or np.ndarray as expected.')
 
     def __eq__(self, other):
-        if isinstance(other, TE):
+        if isinstance(other, ET):
             return np.array_equal(self.vector(), other.vector())
             
         elif isinstance(other, np.ndarray):
@@ -186,7 +186,7 @@ class TE:
             raise TypeError(f'Input parameter is {type(other)}, not TE or np.ndarray as expected.')
 
     def __ne__(self, other):
-        if isinstance(other, TE):
+        if isinstance(other, ET):
             return not np.array_equal(self.vector(), other.vector())
             
         elif isinstance(other, np.ndarray):

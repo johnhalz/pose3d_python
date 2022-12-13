@@ -2,7 +2,7 @@
 
 ## Description
 
-This page covers the `Pose` class. In this documentation, a pose is defined as a description of the position *and* the orientation of an object, and can exist in 2D or 3D. Hence, the `Pose` class allows the user to handle a position and orientation in 2D or 3D, by making use of the `TE` and `RE` classes set to the respective number of dimensions.
+This page covers the `Pose` class. In this documentation, a pose is defined as a description of the position *and* the orientation of an object, and can exist in 2D or 3D. Hence, the `Pose` class allows the user to handle a position and orientation in 2D or 3D, by making use of the `ET` and `ER` classes set to the respective number of dimensions.
 
 -------------------------
 
@@ -40,7 +40,7 @@ This page covers the `Pose` class. In this documentation, a pose is defined as a
 
 ## Value Extraction
 
-To extract the raw values of the position and orientation, it is recommended to go through the `RE` and `TE` members.
+To extract the raw values of the position and orientation, it is recommended to go through the `ER` and `ET` members.
 
 ``` py title="Example"
 new_pose = Pose()
@@ -50,4 +50,4 @@ yaw_angle = new_pose.orientation.yaw()          # Get yaw angle
 position_vector = new_pose.position.vector()    # Get position vector
 ```
 
-Refer to the documentation of the `RE` and `TE` classes to become familiar with their methods.
+Refer to the documentation of the `ER` and `ET` classes to become familiar with their methods.

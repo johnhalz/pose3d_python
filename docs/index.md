@@ -5,8 +5,8 @@ Welcome to the full documentation of the `pose_python` repo.
 ## API Documentation
 
 - [`Pose` Class](https://johnhal.gitlab.io/pose3d_python/API/pose/)
-- [`RE` Class](https://johnhal.gitlab.io/pose3d_python/API/re/)
-- [`TE` Class](https://johnhal.gitlab.io/pose3d_python/API/te/)
+- [`RE` Class](https://johnhal.gitlab.io/pose3d_python/API/er/)
+- [`TE` Class](https://johnhal.gitlab.io/pose3d_python/API/et/)
 - [`Transform` Class](https://johnhal.gitlab.io/pose3d_python/API/transform/)
 - [`TransformSet` Class](https://johnhal.gitlab.io/pose3d_python/API/transform_set/)
 

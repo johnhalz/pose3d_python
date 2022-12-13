@@ -4,11 +4,11 @@ from pathlib import Path
 from  sys import path
 path.append(Path(__file__).parent.parent.as_posix())
 
-from pose3d import TE
+from pose3d import ET
 
 
 def test_te_init():
-    te = TE(name='init_te', dim=2)
+    te = ET(name='init_te', dim=2)
     assert te == np.zeros(2)
 
     if not te == np.zeros(2):
@@ -16,7 +16,7 @@ def test_te_init():
 
 
 def test_te_random():
-    te = TE('random_te', dim=2)
+    te = ET('random_te', dim=2)
     te.random()
     assert te == np.array([te.x(), te.y()])
 
@@ -25,7 +25,7 @@ def test_te_random():
 
 
 def test_te_x():
-    te = TE('x_te')
+    te = ET('x_te')
     te.random()
     assert (te.x() == te.vector()[0])
 
@@ -35,7 +35,7 @@ def test_te_x():
 
 
 def test_te_y():
-    te = TE('y_te')
+    te = ET('y_te')
     te.random()
     assert (te.y() == te.vector()[1])
 
@@ -45,7 +45,7 @@ def test_te_y():
 
 
 def test_te_z():
-    te = TE('y_te')
+    te = ET('y_te')
     te.random()
     assert (te.z() == te.vector()[2])
 
@@ -55,8 +55,8 @@ def test_te_z():
 
         
 def test_te_zero():
-    te_1 = TE('te_1')
-    te_2 = TE('te_2')
+    te_1 = ET('te_1')
+    te_2 = ET('te_2')
     te_1.random()
     assert te_1 != te_2
 

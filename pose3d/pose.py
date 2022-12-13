@@ -1,5 +1,5 @@
-from .te import TE
-from .re import RE
+from .et import ET
+from .er import ER
 
 from .utils import valid_dim
 
@@ -18,10 +18,10 @@ class Pose:
         self.name = name
 
         if valid_dim(te_dim):
-            self.position = TE(dim=te_dim)
+            self.position = ET(dim=te_dim)
 
         if valid_dim(re_dim):
-            self.orientation = RE(dim=re_dim)
+            self.orientation = ER(dim=re_dim)
 
     # Setter functions
     def random(self) -> None:

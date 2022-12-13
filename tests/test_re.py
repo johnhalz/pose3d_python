@@ -4,21 +4,21 @@ from pathlib import Path
 from  sys import path
 path.append(Path(__file__).parent.parent.as_posix())
 
-from pose3d import RE
+from pose3d import ER
 
 RE_TOLERANCE = 1e-10
 
 def test_re_init():
-    re = RE(name='init_re')
+    re = ER(name='init_re')
     assert np.array_equal(re.as_matrix(), np.eye(3))
 
 def test_re_random():
-    re = RE(name='random_re')
+    re = ER(name='random_re')
     re.random()
     assert not np.array_equal(re.as_quat(), [0, 0, 0, 1])
 
 def test_re_quat():
-    re = RE(name='re1')
+    re = ER(name='re1')
 
     re.random()
     quaternion_1 = re.as_quat()
@@ -31,7 +31,7 @@ def test_re_quat():
                        atol=RE_TOLERANCE)
 
 def test_re_matrix():
-    re = RE(name='re1')
+    re = ER(name='re1')
 
     re.random()
     matrix_1 = re.as_matrix()
@@ -44,7 +44,7 @@ def test_re_matrix():
                        atol=RE_TOLERANCE)
 
 def test_re_angle_axis():
-    re = RE(name='re1')
+    re = ER(name='re1')
 
     re.random()
     angle_axis_1 = re.as_angle_axis()
@@ -57,7 +57,7 @@ def test_re_angle_axis():
                        atol=RE_TOLERANCE)
 
 def test_re_euler():
-    re = RE(name='re1')
+    re = ER(name='re1')
 
     # Test for units in degrees and radians
     for degree_opt in [True, False]:
@@ -74,7 +74,7 @@ def test_re_euler():
                            atol=RE_TOLERANCE)
 
 def test_re_apply_and_inv():
-    re = RE(name='re1')
+    re = ER(name='re1')
 
     random_vector = np.random.rand(3)
 
@@ -84,8 +84,8 @@ def test_re_apply_and_inv():
     assert np.array_equal(random_vector, rotated_vector)
 
 def test_re_eq():
-    re1 = RE(name='re1')
-    re2 = RE(name='re2')
+    re1 = ER(name='re1')
+    re2 = ER(name='re2')
 
     re1.random()
     re2.from_quat(re1.as_quat())

@@ -1,8 +1,8 @@
-# RE Class
+# ER Class
 
 ## Description
 
-This page covers the Euclidean Rotation (`RE`) class. This class is meant to represent rotations in the 2D and 3D euclidean space. One can use this class to apply a rotation to a 3D or 2D vector. This class is also capable of handling a rotation in its different forms (quaternion, matrix, euler angles, etc.).
+This page covers the Euclidean Rotation (`ER`) class. This class is meant to represent rotations in the 2D and 3D euclidean space. One can use this class to apply a rotation to a 3D or 2D vector. This class is also capable of handling a rotation in its different forms (quaternion, matrix, euler angles, etc.).
 
 -------------------------
 
@@ -10,7 +10,7 @@ This page covers the Euclidean Rotation (`RE`) class. This class is meant to rep
 
 - ### `__init__(self, name: str = '', dim: int = 3) -> None`
 
-    The `__init__` method is called when a new instance of the `RE` class is created. It initializes all of the variables in the class and sets them to their default values.
+    The `__init__` method is called when a new instance of the `ER` class is created. It initializes all of the variables in the class and sets them to their default values.
 
     By default, the `self.__rotation` member value is set to an identity value.
     
@@ -24,7 +24,7 @@ This page covers the Euclidean Rotation (`RE`) class. This class is meant to rep
     The `identity` method sets the `self.__rotation` member to the equivalent of an identity matrix.
 
     ``` py title="Example"
-    new_rotation = RE()
+    new_rotation = ER()
     new_rotation.identity()     # Set new_rotation to identity
     ```
 
@@ -33,7 +33,7 @@ This page covers the Euclidean Rotation (`RE`) class. This class is meant to rep
     The `random` method sets the `self.__rotation` member to a random value.
 
     ``` py title="Example"
-    new_rotation = RE()
+    new_rotation = ER()
     new_rotation.random()   # Set new_rotation to random value
     ```
 
@@ -42,7 +42,7 @@ This page covers the Euclidean Rotation (`RE`) class. This class is meant to rep
     The `inv` method sets the `self.__rotation` member to its inverse.
 
     ``` py title="Example"
-    new_rotation = RE()
+    new_rotation = ER()
     new_rotation.random()   # Set new_rotation to random value
     new_rotation.inv()      # Set new_rotation to its inverse
     ```
@@ -51,27 +51,27 @@ This page covers the Euclidean Rotation (`RE`) class. This class is meant to rep
 
     The `from_quat` method set the `self.__rotation` member from the value of the input `quat`.
 
-    **Note:** This method will not work for `RE` objects that are defined in 2D space.
+    **Note:** This method will not work for `ER` objects that are defined in 2D space.
 
     **Parameters**
 
     - `quat` (`np.ndarray|list`): Input quaternion
 
     ``` py title="Example"
-    new_rotation = RE()
+    new_rotation = ER()
     new_rotation.from_quat([0, 0, 0, 1])
     ```
 
 - ### `from_matrix(self, matrix: np.ndarray) -> None`
 
-    The `from_matrix` method set the `self.__rotation` member from the value of the input `matrix`. The method will first check whether the input matrix dimensions are suitable for the number of dimensions set for the `RE` object.
+    The `from_matrix` method set the `self.__rotation` member from the value of the input `matrix`. The method will first check whether the input matrix dimensions are suitable for the number of dimensions set for the `ER` object.
 
     **Parameters**
 
     - `matrix` (`np.ndarray`): Input matrix
 
     ``` py title="Example"
-    new_rotation = RE(dim=2)
+    new_rotation = ER(dim=2)
 
     matrix = np.array([[1, 2], [2, 1]])
 
@@ -82,14 +82,14 @@ This page covers the Euclidean Rotation (`RE`) class. This class is meant to rep
 
     The `from_angle_axis` method set the `self.__rotation` member from the value of the input `angle_axis`.
     
-    **Note:** This method will not work for `RE` objects that are defined in 2D space.
+    **Note:** This method will not work for `ER` objects that are defined in 2D space.
 
     **Parameters**
 
     - `angle_axis` (`np.ndarray`): Input angle-axis vector
 
     ``` py title="Example"
-    new_rotation = RE()
+    new_rotation = ER()
     matrix = np.array([1, 2, 3])
     new_rotation.from_angle_axis(matrix)
     ```
@@ -105,7 +105,7 @@ This page covers the Euclidean Rotation (`RE`) class. This class is meant to rep
     - `degrees` (`bool`): Set to true if input angles are in degrees (default: `True`)
 
     ``` py title="Example"
-    new_rotation = RE()
+    new_rotation = ER()
     new_rotation.from_euler(sequence='xyz', angles=[30, 20, 10], degrees=True)
     ```
 
@@ -118,7 +118,7 @@ This page covers the Euclidean Rotation (`RE`) class. This class is meant to rep
     - `np.ndarray`: Quaternion vector
 
     ``` py title="Example"
-    new_rotation = RE()
+    new_rotation = ER()
     new_rotation.random()           # Set to random value
     print(new_rotation.as_quat())   # Return rotation in quaternion form
     ```
@@ -132,7 +132,7 @@ This page covers the Euclidean Rotation (`RE`) class. This class is meant to rep
     - `np.ndarray`: Rotation matrix
 
     ``` py title="Example"
-    new_rotation = RE()
+    new_rotation = ER()
     new_rotation.random()           # Set to random value
     print(new_rotation.as_matrix()) # Return rotation in matrix form
     ```
@@ -146,7 +146,7 @@ This page covers the Euclidean Rotation (`RE`) class. This class is meant to rep
     - `np.ndarray`: Angle-axis vector
 
     ``` py title="Example"
-    new_rotation = RE()
+    new_rotation = ER()
     new_rotation.random()               # Set to random value
     print(new_rotation.as_angle_axis()) # Return rotation in matrix form
     ```
@@ -162,16 +162,16 @@ This page covers the Euclidean Rotation (`RE`) class. This class is meant to rep
 
     **Returns**
 
-    - `np.ndarray|float`: Euler angle(s) (if `RE` is in 2D then only a float will be returned)
+    - `np.ndarray|float`: Euler angle(s) (if `ER` is in 2D then only a float will be returned)
 
     ``` py title="3D Example"
-    new_rotation = RE()
+    new_rotation = ER()
     new_rotation.random()                               # Set to random value
     print(new_rotation.as_euler('xy', degrees=True))    # Return rotation in matrix form
     ```
 
     ``` py title="2D Example"
-    new_rotation = RE(dim=2)
+    new_rotation = ER(dim=2)
     new_rotation.random()                       # Set to random value
     print(new_rotation.as_euler(degrees=True))  # Return rotation in matrix form
     ```
@@ -191,7 +191,7 @@ This page covers the Euclidean Rotation (`RE`) class. This class is meant to rep
     - `float`: Yaw angle (in specified units)
 
     ``` py title="Example"
-    new_rotation = RE()
+    new_rotation = ER()
     new_rotation.random()       # Set to random value
     print(new_rotation.yaw())   # Return yaw angle of rotation
     ```
@@ -211,7 +211,7 @@ This page covers the Euclidean Rotation (`RE`) class. This class is meant to rep
     - `float`: Pitch angle (in specified units)
 
     ``` py title="Example"
-    new_rotation = RE()
+    new_rotation = ER()
     new_rotation.random()       # Set to random value
     print(new_rotation.pitch()) # Return pitch angle of rotation
     ```
@@ -231,7 +231,7 @@ This page covers the Euclidean Rotation (`RE`) class. This class is meant to rep
     - `float`: Roll angle (in specified units)
 
     ``` py title="Example"
-    new_rotation = RE()
+    new_rotation = ER()
     new_rotation.random()       # Set to random value
     print(new_rotation.roll())  # Return roll angle of rotation
     ```
@@ -240,7 +240,7 @@ This page covers the Euclidean Rotation (`RE`) class. This class is meant to rep
 
     The `apply` method applies this rotation to `input` vector.
 
-    **Note:** The dimension of the input vector must match the set dimension of the `RE` object.
+    **Note:** The dimension of the input vector must match the set dimension of the `ER` object.
 
     **Parameters**
 
@@ -252,7 +252,7 @@ This page covers the Euclidean Rotation (`RE`) class. This class is meant to rep
 
     ``` py title="Example"
     vector = np.array([2, 3, 1])
-    new_rotation = RE()
+    new_rotation = ER()
     new_rotation.random()       # Set to random value
     rotated_vector = new_rotation.apply(vector)
     ```

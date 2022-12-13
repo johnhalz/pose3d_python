@@ -2,7 +2,7 @@ import numpy as np
 from scipy.spatial.transform import Rotation
 from .utils import RE_TOLERANCE, valid_dim
 
-class RE:
+class ER:
     def __init__(self, name: str = '', dim: int = 3) -> None:
         '''
         The `__init__` function is called when a new instance of the `RE` class is created.
@@ -203,7 +203,7 @@ class RE:
         if self.__dim == 2:
             raise AttributeError(f'Unable to return yaw angle of 2D rotation (Call as_euler() instead).')
 
-        return self.__rotation.as_euler('z', degrees)[0]
+        return self.__rotation.as_euler('xyz', degrees)[2]
 
     def pitch(self, degrees: bool = True) -> float:
         '''
@@ -222,7 +222,7 @@ class RE:
         if self.__dim == 2:
             raise AttributeError(f'Unable to return pitch angle of 2D rotation (Call as_euler() instead).')
 
-        return self.__rotation.as_euler('y', degrees)[0]
+        return self.__rotation.as_euler('xyz', degrees)[1]
 
     def roll(self, degrees: bool = True) -> float:
         '''
@@ -241,7 +241,7 @@ class RE:
         if self.__dim == 2:
             raise AttributeError(f'Unable to return roll angle of 2D rotation (Call as_euler() instead).')
 
-        return self.__rotation.as_euler('x', degrees)[0]
+        return self.__rotation.as_euler('xyz', degrees)[0]
 
     # Computation functions
     def apply(self, input: np.ndarray|list) -> np.ndarray:
@@ -279,7 +279,7 @@ class RE:
         return f'{self.as_euler(sequence, degrees=True)} degrees'
 
     def __eq__(self, other):
-        if isinstance(other, RE):
+        if isinstance(other, ER):
             return np.allclose(self.as_quat(),
                                other.as_quat(),
                                rtol=RE_TOLERANCE,
@@ -288,7 +288,7 @@ class RE:
             raise TypeError(f'Input parameter is {type(other)}, not RE as expected.')
 
     def __ne__(self, other):
-        if isinstance(other, RE):
+        if isinstance(other, ER):
             return not np.allclose(self.as_quat(),
                                    other.as_quat(),
                                    rtol=RE_TOLERANCE,
