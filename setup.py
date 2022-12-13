@@ -1,7 +1,7 @@
 from pathlib import Path
 from setuptools import setup, find_packages
 
-VERSION = '2.0.5'
+VERSION = '2.0.7'
 DESCRIPTION = 'Transforming and handling 3D poses and frames.'
 
 # Read the contents of README file
@@ -11,7 +11,7 @@ long_description = (this_directory / "README.md").read_text()
 
 # Add resource links
 project_urls = {
-    'Documentation': 'https://johnhal.gitlab.io/pose_python',
+    'Documentation': 'https://johnhal.gitlab.io/pose3d_python',
     'Repository': 'https://gitlab.com/johnhal/pose3d_python'
 }
 
