@@ -8,7 +8,9 @@ This page covers the `Transform` class. This class is meant to represent transfo
 
 ## Class Methods
 
-- ### `__init__(self, name: str, orig: str = 'origin', dest: str = 'destination', te_dim: int = 3, re_dim: int = 3) -> None`
+- ### Transform.__init__
+
+    `__init__(self, name: str, orig: str = 'origin', dest: str = 'destination', te_dim: int = 3, re_dim: int = 3) -> None`
 
     The `__init__` method is called when a new instance of the `Transform` class is created. It initializes all of the variables in the class and sets them to their default values.
 
@@ -22,7 +24,9 @@ This page covers the `Transform` class. This class is meant to represent transfo
     - `te_dim` (`int`): Set the number of dimensions of the translation element (default: `3`)
     - `re_dim` (`int`): Set the number of dimensions of the rotation element (default: `3`)
 
-- ### `between_poses(self, pose_1: Pose, pose_2: Pose) -> None`
+- ### Transform.between_poses
+
+    `between_poses(self, pose_1: Pose, pose_2: Pose) -> None`
 
     Compute transform between 2 3D poses. This instance of Transform will be modifed to compute the transform from `pose_1` to `pose_2`.
 
@@ -31,19 +35,27 @@ This page covers the `Transform` class. This class is meant to represent transfo
     - `pose_1` (`Pose`): Origin pose
     - `pose_2` (`Pose`): Destination pose
 
-- ### `identity(self) -> None`
+- ### Transform.identity
+
+    `identity(self) -> None`
 
     Set the transformation to zero and the rotation to identity.
 
-- ### `inv(self) -> None`
+- ### Transform.inv
+
+    `inv(self) -> None`
 
     Set the transformation it's inverse.
 
-- ### `random(self) -> None`
+- ### Transform.random
+
+    `random(self) -> None`
 
     Set a random transformation.
 
-- ### `dims(self) -> tuple[int, int]`
+- ### Transform.dims
+
+    `dims(self) -> tuple[int, int]`
 
     Returns the dimensions of the translation and rotation (in that order).
 
@@ -51,7 +63,9 @@ This page covers the `Transform` class. This class is meant to represent transfo
 
     - `tuple[int, int]`: Dimension of translation and rotation (in that order)
 
-- ### `matrix(self, homogeneous: bool = True) -> np.ndarray`
+- ### Transform.matrix
+
+    `matrix(self, homogeneous: bool = True) -> np.ndarray`
 
     Return the transformation matrix.
 
@@ -59,7 +73,9 @@ This page covers the `Transform` class. This class is meant to represent transfo
 
     - `np.ndarray`: Transformation matrix
 
-- ### `apply(self, io: Pose|np.ndarray) -> Pose|np.ndarray`
+- ### Transform.apply
+
+    `apply(self, io: Pose|np.ndarray) -> Pose|np.ndarray`
 
     Apply transformation to `io`.
 

@@ -8,7 +8,9 @@ This page covers the `Pose` class. In this documentation, a pose is defined as a
 
 ## Class Methods
 
-- ### `__init__(self, name: str = '', dim: int = 3) -> None`
+- ### Pose.__init__
+
+    `__init__(self, name: str = '', dim: int = 3) -> None`
 
     The `__init__` method is called when a new instance of the `Pose` class is created.
     It initializes all of the variables in the class and sets them to their default values.
@@ -18,7 +20,9 @@ This page covers the `Pose` class. In this documentation, a pose is defined as a
     - `name` (`str`): Set the name of the object (default: '')
     - `dim` (`int`): Set the dimension of the vector (default: 3)
 
-- ### `random(self) -> None`
+- ### Pose.random
+
+    `random(self) -> None`
 
     Sets the position and orientation to random values.
 
@@ -27,7 +31,9 @@ This page covers the `Pose` class. In this documentation, a pose is defined as a
     new_pose.random()
     ```
 
-- ### `zero(self) -> None`
+- ### Pose.zero
+
+    `zero(self) -> None`
 
     Sets the position vector to zero and orientation to identity.
 

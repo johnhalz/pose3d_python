@@ -8,7 +8,9 @@ This page covers the Euclidean Rotation (`ER`) class. This class is meant to rep
 
 ## Class Methods
 
-- ### `__init__(self, name: str = '', dim: int = 3) -> None`
+- ### ER.__init__
+
+    `__init__(self, name: str = '', dim: int = 3) -> None`
 
     The `__init__` method is called when a new instance of the `ER` class is created. It initializes all of the variables in the class and sets them to their default values.
 
@@ -19,7 +21,9 @@ This page covers the Euclidean Rotation (`ER`) class. This class is meant to rep
     - `name` (`str`): Set the name of the object (default: '')
     - `dim` (`int`): Set the dimension of the vector (default: `3`)
 
-- ### `identity(self, ) -> None`
+- ### ER.identity
+
+    `identity(self) -> None`
 
     The `identity` method sets the `self.__rotation` member to the equivalent of an identity matrix.
 
@@ -28,7 +32,9 @@ This page covers the Euclidean Rotation (`ER`) class. This class is meant to rep
     new_rotation.identity()     # Set new_rotation to identity
     ```
 
-- ### `random(self, ) -> None`
+- ### ER.random
+
+    `random(self) -> None`
 
     The `random` method sets the `self.__rotation` member to a random value.
 
@@ -37,7 +43,9 @@ This page covers the Euclidean Rotation (`ER`) class. This class is meant to rep
     new_rotation.random()   # Set new_rotation to random value
     ```
 
-- ### `inv(self, ) -> None`
+- ### ER.inv
+
+    `inv(self) -> None`
 
     The `inv` method sets the `self.__rotation` member to its inverse.
 
@@ -47,7 +55,9 @@ This page covers the Euclidean Rotation (`ER`) class. This class is meant to rep
     new_rotation.inv()      # Set new_rotation to its inverse
     ```
 
-- ### `from_quat(self, quat: np.ndarray|list) -> None`
+- ### ER.from_quat
+
+    `from_quat(self, quat: np.ndarray|list) -> None`
 
     The `from_quat` method set the `self.__rotation` member from the value of the input `quat`.
 
@@ -62,7 +72,9 @@ This page covers the Euclidean Rotation (`ER`) class. This class is meant to rep
     new_rotation.from_quat([0, 0, 0, 1])
     ```
 
-- ### `from_matrix(self, matrix: np.ndarray) -> None`
+- ### ER.from_matrix
+
+    `from_matrix(self, matrix: np.ndarray) -> None`
 
     The `from_matrix` method set the `self.__rotation` member from the value of the input `matrix`. The method will first check whether the input matrix dimensions are suitable for the number of dimensions set for the `ER` object.
 
@@ -78,7 +90,9 @@ This page covers the Euclidean Rotation (`ER`) class. This class is meant to rep
     new_rotation.from_matrix(matrix)
     ```
 
-- ### `from_angle_axis(self, angle_axis: np.ndarray) -> None`
+- ### ER.from_angle
+
+    `from_angle_axis(self, angle_axis: np.ndarray) -> None`
 
     The `from_angle_axis` method set the `self.__rotation` member from the value of the input `angle_axis`.
     
@@ -94,7 +108,9 @@ This page covers the Euclidean Rotation (`ER`) class. This class is meant to rep
     new_rotation.from_angle_axis(matrix)
     ```
 
-- ### `from_euler(self, sequence: str = None, angles: np.ndarray|list = None, degrees: bool = True) -> None`
+- ### ER.from_euler
+
+    `from_euler(self, sequence: str = None, angles: np.ndarray|list = None, degrees: bool = True) -> None`
 
     The `from_euler` method set the `self.__rotation` member from the value(s) of the inputs `sequence` and `angles`. The angle will be converted from degrees to radians if `degrees` is `True`.
 
@@ -109,7 +125,9 @@ This page covers the Euclidean Rotation (`ER`) class. This class is meant to rep
     new_rotation.from_euler(sequence='xyz', angles=[30, 20, 10], degrees=True)
     ```
 
-- ### `as_quat(self, ) -> np.ndarray`
+- ### ER.as_quat
+
+    `as_quat(self) -> np.ndarray`
 
     Return the stored `self.__rotation` member in quaternion form.
 
@@ -123,7 +141,9 @@ This page covers the Euclidean Rotation (`ER`) class. This class is meant to rep
     print(new_rotation.as_quat())   # Return rotation in quaternion form
     ```
 
-- ### `as_matrix(self, ) -> np.ndarray`
+- ### ER.as_matrix
+
+    `as_matrix(self) -> np.ndarray`
 
     Return the stored `self.__rotation` member in matrix form.
 
@@ -137,7 +157,9 @@ This page covers the Euclidean Rotation (`ER`) class. This class is meant to rep
     print(new_rotation.as_matrix()) # Return rotation in matrix form
     ```
 
-- ### `as_angle_axis(self, ) -> np.ndarray`
+- ### ER.as_angle_axis
+
+    `as_angle_axis(self) -> np.ndarray`
 
     Return the stored `self.__rotation` member in angle-axis form.
 
@@ -151,7 +173,9 @@ This page covers the Euclidean Rotation (`ER`) class. This class is meant to rep
     print(new_rotation.as_angle_axis()) # Return rotation in matrix form
     ```
 
-- ### `as_euler(self, sequence: str = None, degrees: bool = True) -> np.ndarray|float`
+- ### ER.as_euler
+
+    `as_euler(self, sequence: str = None, degrees: bool = True) -> np.ndarray|float`
 
     Return the stored `self.__rotation` member in euler angles.
 
@@ -176,7 +200,9 @@ This page covers the Euclidean Rotation (`ER`) class. This class is meant to rep
     print(new_rotation.as_euler(degrees=True))  # Return rotation in matrix form
     ```
 
-- ### `yaw(self, degrees: bool = True) -> float`
+- ### ER.yaw
+
+    `yaw(self, degrees: bool = True) -> float`
 
     Return rotation angle around the z axis.
 
@@ -196,7 +222,9 @@ This page covers the Euclidean Rotation (`ER`) class. This class is meant to rep
     print(new_rotation.yaw())   # Return yaw angle of rotation
     ```
 
-- ### `pitch(self, degrees: bool = True) -> float`
+- ### ER.pitch
+
+    `pitch(self, degrees: bool = True) -> float`
 
     Return rotation angle around the y axis.
 
@@ -216,7 +244,9 @@ This page covers the Euclidean Rotation (`ER`) class. This class is meant to rep
     print(new_rotation.pitch()) # Return pitch angle of rotation
     ```
 
-- ### `roll(self, degrees: bool = True) -> float`
+- ### ER.roll
+
+    `roll(self, degrees: bool = True) -> float`
 
     Return rotation angle around the x axis.
 
@@ -236,7 +266,9 @@ This page covers the Euclidean Rotation (`ER`) class. This class is meant to rep
     print(new_rotation.roll())  # Return roll angle of rotation
     ```
 
-- ### `apply(self, input: np.ndarray|list) -> np.ndarray`
+- ### ER.apply
+
+    `apply(self, input: np.ndarray|list) -> np.ndarray`
 
     The `apply` method applies this rotation to `input` vector.
 

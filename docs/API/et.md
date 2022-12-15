@@ -8,7 +8,9 @@ This page covers the Euclidean Translation (`ET`) class. This class is meant to 
 
 ## Class Methods
 
-- ### `__init__(self, name: str = '', dim: int = 3, vector: np.ndarray|list = None) -> None`
+- ### ET.__init__
+
+    `__init__(self, name: str = '', dim: int = 3, vector: np.ndarray|list = None) -> None`
 
     The `__init__` method is called when a new instance of the `ET` class is created. It initializes all of the variables in the class and sets them to their default values.
 
@@ -20,7 +22,9 @@ This page covers the Euclidean Translation (`ET`) class. This class is meant to 
     - `dim` (`int`): Set the dimension of the vector (default: `3`)
     - `vector` (`np.ndarray|list`): Set value of vector at `__init__` (default: `None`)
 
-- ### `random(self) -> None`
+- ### ET.random
+
+    `random(self) -> None`
 
     The `random` method sets the `self.__vector` member to a random state.
 
@@ -29,7 +33,9 @@ This page covers the Euclidean Translation (`ET`) class. This class is meant to 
     new_position.random()           # Set to random value
     ```
 
-- ### `from_vector(self, vector: np.ndarray|list) -> None`
+- ### ET.from_vector
+
+    `from_vector(self, vector: np.ndarray|list) -> None`
 
     The `from_vector` method sets the `self.__vector` to the input vector.
 
@@ -44,7 +50,9 @@ This page covers the Euclidean Translation (`ET`) class. This class is meant to 
     new_position.from_vector([3, 2, 1]) # Set value from input vector/list
     ```
 
-- ### `zero(self) -> None`
+- ### ET.zero
+
+    `zero(self) -> None`
 
     The `zero` method sets the `self.__vector` to zero.
 
@@ -54,7 +62,9 @@ This page covers the Euclidean Translation (`ET`) class. This class is meant to 
     new_position.zero()     # Set to zero
     ```
 
-- ### `inv(self) -> None`
+- ### ET.inv
+
+    `inv(self) -> None`
 
     The `inv` method sets the `self.__vector` member to its inverse (negative value).
 
@@ -64,7 +74,9 @@ This page covers the Euclidean Translation (`ET`) class. This class is meant to 
     new_position.inv()      # Set to negative value of random values
     ```
 
-- ### `vector(self) -> np.ndarray`
+- ### ET.vector
+
+    `vector(self) -> np.ndarray`
 
     Return the value of the `self.__vector` member.
 
@@ -78,7 +90,9 @@ This page covers the Euclidean Translation (`ET`) class. This class is meant to 
     new_position.vector()   # Return position vector
     ```
 
-- ### `x(self) -> float`
+- ### ET.x
+
+    `x(self) -> float`
 
     Return the first element of the `self.__vector` member.
 
@@ -92,7 +106,9 @@ This page covers the Euclidean Translation (`ET`) class. This class is meant to 
     new_position.x()        # Return first element of position vector
     ```
 
-- ### `y(self) -> float`
+- ### ET.y
+
+    `y(self) -> float`
 
     Return the second element of the `self.__vector` member.
 
@@ -106,7 +122,9 @@ This page covers the Euclidean Translation (`ET`) class. This class is meant to 
     new_position.y()        # Return second element of position vector
     ```
 
-- ### `z(self) -> float`
+- ### ET.z
+
+    `z(self) -> float`
 
     Return the third element of the `self.__vector` member.
 
