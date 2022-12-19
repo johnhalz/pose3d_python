@@ -118,7 +118,7 @@ class ET:
 
     # Operator overloads
     def __str__(self) -> str:
-        return f'TE{self.__dim} - {self.name}: {self.vector()}'
+        return f'ET{self.__dim} - {self.name}: {self.vector()}'
 
     def __repr__(self) -> str:
         return f'{self.vector()}'

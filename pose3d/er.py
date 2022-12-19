@@ -268,7 +268,7 @@ class ER:
 
     # Operator overloading
     def __str__(self) -> str:
-        return f'RE - {self.name}: {self.__repr__()} degrees'
+        return f'ER{self.__dim} - {self.name}: {self.__repr__()} degrees'
 
     def __repr__(self) -> str:
         if self.__dim == 3:
@@ -276,7 +276,7 @@ class ER:
         if self.__dim == 2:
             sequence = 'z'
 
-        return f'{self.as_euler(sequence, degrees=True)} degrees'
+        return f'{self.as_euler(sequence, degrees=True)}'
 
     def __eq__(self, other):
         if isinstance(other, ER):
