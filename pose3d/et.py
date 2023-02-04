@@ -9,7 +9,7 @@ class ET:
         It initializes all of the variables in the class and sets them to their default values.
 
         By default, the `self.__vector` member value is set to zero.
-        
+
         Parameters
         ----------
         - `name` (`str`): Set the name of the object (default: '')
@@ -48,7 +48,7 @@ class ET:
         vector = np.array(vector)
         if vector.shape != self.__vector.shape:
             raise ValueError(f'Input vector dimension ({vector.shape[0]}) does not match the set dimension ({self.__vector.shape[0]}).')
-        
+
         self.__vector = vector
 
     def zero(self) -> None:
@@ -178,7 +178,7 @@ class ET:
     def __eq__(self, other):
         if isinstance(other, ET):
             return np.array_equal(self.vector(), other.vector())
-            
+
         elif isinstance(other, np.ndarray):
             return np.array_equal(self.vector(), other)
 
@@ -188,7 +188,7 @@ class ET:
     def __ne__(self, other):
         if isinstance(other, ET):
             return not np.array_equal(self.vector(), other.vector())
-            
+
         elif isinstance(other, np.ndarray):
             return not np.array_equal(self.vector(), other)
 
