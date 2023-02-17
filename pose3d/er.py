@@ -3,7 +3,7 @@ from scipy.spatial.transform import Rotation
 from .utils import RE_TOLERANCE, valid_dim
 
 class ER:
-    def __init__(self, name: str = '', dim: int = 3) -> None:
+    def __init__(self, name: str = None, dim: int = None) -> None:
         '''
         The `__init__` function is called when a new instance of the `RE` class is created.
         It initializes all of the variables in the class and sets them to their default values.
@@ -15,12 +15,16 @@ class ER:
         - `name` (`str`): Set the name of the object (default: '')
         - `dim` (`int`): Set the dimension of the vector (default: 3)
         '''
-        self.name = name
-        self.__rotation = Rotation(quat=[0, 0, 0, 1])
-        self.identity()
+        self.name = ''
+        if name is not None:
+            self.name = name
 
-        if valid_dim(dim):
-            self.__dim = dim
+        self.__rotation = Rotation(quat=[0, 0, 0, 1])
+
+        self.__dim = 3
+        if dim is not None:
+            if valid_dim(dim):
+                self.__dim = dim
 
     # Setter functions
     def identity(self) -> None:
@@ -28,7 +32,7 @@ class ER:
         The `identity` function sets the `self.__rotation` member to
         the equivalent of an identity matrix.
         '''
-        self.__rotation = Rotation.identity()
+        self.__rotation.identity()
 
     def inv(self) -> None:
         '''
@@ -184,7 +188,7 @@ class ER:
             return self.__rotation.as_euler(sequence, degrees)
 
         elif self.__dim == 2:
-            return self.__rotation.as_euler('z', degrees)[0]
+            return self.__rotation.as_euler('zyx', degrees)[0]
 
     def yaw(self, degrees: bool = True) -> float:
         '''
