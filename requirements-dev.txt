@@ -3,6 +3,9 @@ scipy
 pandas
 toml
 
+# Testing
+pytest
+
 # Package deployment
 twine
 
