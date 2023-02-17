@@ -1,4 +1,5 @@
 import numpy as np
+from typing import Tuple, Union
 
 from .et import ET
 from .er import ER
@@ -36,15 +37,15 @@ class Transform:
             raise AttributeError(f'Number of dimensions between both poses do not match: pose_1.dims() = {pose_1.dims()} and pose_2.dims = {pose_2.dims()}.')
 
         # Modify dimension of transformation depending on pose_1 and pose_2
-        if pose_1.position.dim() != self.translation.dim():
-            self.translation = ET(dim=pose_1.position.dim())
+        if pose_1.position.dim() != self.translation.dim:
+            self.translation = ET(dim=pose_1.position.dim)
 
-        if pose_1.orientation.dim() != self.rotation.dim():
-            self.rotation = ER(dim=pose_1.orientation.dim())
+        if pose_1.orientation.dim() != self.rotation.dim:
+            self.rotation = ER(dim=pose_1.orientation.dim)
 
         # Compute rotation from pose_1 to pose_2
         self.rotation.from_matrix(np.linalg.inv(pose_2.orientation.as_matrix()) * pose_1.orientation.as_matrix())
-        self.translation.from_vector(pose_2.position.vector() - pose_1.position.vector())
+        self.translation.from_vector(pose_2.position.vector - pose_1.position.vector)
 
     def identity(self) -> None:
         '''
@@ -52,13 +53,13 @@ class Transform:
         '''
         self.translation.zero()
         self.rotation.identity()
-        
+
     def inv(self) -> None:
         '''
         Set the transformation it's inverse.
         '''
         self.rotation = self.rotation.inv()
-        self.translation.from_vector(-self.rotation.apply(self.translation.vector()))
+        self.translation.from_vector(-self.rotation.apply(self.translation.vector))
 
     def random(self) -> None:
         '''
@@ -66,9 +67,9 @@ class Transform:
         '''
         self.translation.random()
         self.rotation.random()
-    
+
     # Getter functions
-    def dims(self) -> tuple[int, int]:
+    def dims(self) -> Tuple[int, int]:
         '''
         Returns the dimensions of the translation and rotation (in that order).
 
@@ -76,7 +77,7 @@ class Transform:
         -------
         - `tuple[int, int]`: Dimension of translation and rotation (in that order)
         '''
-        return self.translation.dim(), self.rotation.dim()
+        return self.translation.dim, self.rotation.dim
 
     def matrix(self, homogeneous: bool = True) -> np.ndarray:
         '''
@@ -87,18 +88,18 @@ class Transform:
         - `np.ndarray`: Transformation matrix
         '''
         matrix = np.eye(max(self.dims()) + 1)
-        
+
         if self.origin != self.destination:
-            matrix[:self.rotation.dim(), :self.rotation.dim()] = self.rotation.as_matrix()
-            matrix[:self.translation.dim(), -1] = self.translation.vector()
+            matrix[:self.rotation.dim, :self.rotation.dim] = self.rotation.as_matrix()
+            matrix[:self.translation.dim, -1] = self.translation.vector
 
         if not homogeneous:
             return matrix[:-1, :]
-        
+
         return matrix
 
     # Computation functions
-    def apply(self, io: Pose|np.ndarray) -> Pose|np.ndarray:
+    def apply(self, input_element: Union[Pose, np.ndarray]) -> Union[Pose, np.ndarray]:
         '''
         Apply transformation to `io`.
 
@@ -112,24 +113,24 @@ class Transform:
         '''
 
         # If io is a Pose
-        if isinstance(io, Pose):
-            io.orientation.from_matrix(np.matmul(self.rotation.as_matrix(), io.orientation.as_matrix()))
-            io.position += self.translation
+        if isinstance(input_element, Pose):
+            input_element.orientation.from_matrix(np.matmul(self.rotation.as_matrix(), input_element.orientation.as_matrix()))
+            input_element.position += self.translation
 
         # If io is a numpy vector
-        if isinstance(io, np.ndarray):
-            io = self.rotation.apply(io) + self.translation
+        if isinstance(input_element, np.ndarray):
+            input_element = self.rotation.apply(input_element) + self.translation
 
-        return io
+        return input_element
 
     # Operator overloads
     def __repr__(self) -> str:
         return f'''Transform - {self.name}:
-        Position:    {self.position.__repr__}
-        Orientation: {self.orientation.__repr__}'''
+        Position:    {self.translation.__repr__}
+        Orientation: {self.rotation.__repr__}'''
 
     def __str__(self) -> str:
-        return f'Translation: {self.position.__repr__}\nRotation:    {self.orientation.__repr__}'
+        return f'Translation: {self.translation.__repr__}\nRotation:    {self.rotation.__repr__}'
 
     def __eq__(self, other: object) -> bool:
         return self.translation == other.translation and self.rotation == other.rotation

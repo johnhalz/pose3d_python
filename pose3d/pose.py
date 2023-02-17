@@ -1,5 +1,6 @@
 from .et import ET
 from .er import ER
+from typing import Tuple
 
 from .utils import valid_dim
 
@@ -8,7 +9,7 @@ class Pose:
         '''
         The `__init__` function is called when a new instance of the `Pose` class is created.
         It initializes all of the variables in the class and sets them to their default values.
-        
+
         Parameters
         ----------
         - `name` (`str`): Set the name of the object (default: '')
@@ -39,7 +40,7 @@ class Pose:
         self.position.zero()
 
     # Getter functions
-    def dims(self) -> tuple[int, int]:
+    def dims(self) -> Tuple[int, int]:
         '''
         Returns the dimensions of the position and orientation (in that order).
 
@@ -47,11 +48,11 @@ class Pose:
         -------
         - `tuple[int, int]`: Dimension of position and orientation (in that order)
         '''
-        return self.position.dim(), self.orientation.dim()
+        return self.position.dim, self.orientation.dim
 
     # Operator overloads
     def __str__(self) -> str:
-        return f'''Pose ({self.__dim}D) - {self.name}:
+        return f'''Pose - {self.name}:
         Position:    {self.position.__repr__}
         Orientation: {self.orientation.__repr__}'''
 
@@ -59,13 +60,13 @@ class Pose:
         return f'Position:    {self.position.__repr__}\nOrientation: {self.orientation.__repr__}'
 
     def __eq__(self, other) -> bool:
-        if isinstance(other, Pose) and other.__dim == self.__dim:
+        if isinstance(other, Pose) and other.dims() == self.dims():
             return self.orientation == other.orientation and self.position == other.position
-        else:
-            return False
+
+        return False
 
     def __ne__(self, other) -> bool:
-        if isinstance(other, Pose) and other.__dim == self.__dim:
+        if isinstance(other, Pose) and other.dims() == self.dims():
             return self.orientation != other.orientation or self.position != other.position
-        else:
-            return False
+
+        return False

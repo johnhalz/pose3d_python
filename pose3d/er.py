@@ -1,6 +1,8 @@
 import numpy as np
 from scipy.spatial.transform import Rotation
-from .utils import RE_TOLERANCE, valid_dim
+from .utils import ER_TOLERANCE, valid_dim
+
+from typing import Union
 
 class ER:
     def __init__(self, name: str = '', dim: int = 3) -> None:
@@ -42,7 +44,7 @@ class ER:
         '''
         self.__rotation = Rotation.random()
 
-    def from_quat(self, quat: np.ndarray|list) -> None:
+    def from_quat(self, quat: Union[np.ndarray, list]) -> None:
         '''
         The `from_quat` function set the `self.__rotation` member from the value of
         the input `quat`.
@@ -51,10 +53,10 @@ class ER:
 
         Parameters
         ----------
-        - `quat` (`np.ndarray|list`): Input quaternion
+        - `quat` (`Union[np.ndarray, list]`): Input quaternion
         '''
         if self.__dim == 2:
-            raise AttributeError(f'Unable to set 2D rotation from quaternion input.')
+            raise AttributeError('Unable to set 2D rotation from quaternion input.')
 
         if len(quat) != 4:
             raise ValueError(f'Input vector shape must be equal to 4 (input shape: {len(quat)}).')
@@ -92,14 +94,14 @@ class ER:
         - `angle_axis` (`np.ndarray`): Input angle-axis vector
         '''
         if self.__dim == 2:
-            raise AttributeError(f'Unable to set 2D rotation from angle-axis input.')
+            raise AttributeError('Unable to set 2D rotation from angle-axis input.')
 
         if len(angle_axis) != 3:
             raise ValueError(f'Input vector shape must be equal to 3 (input shape: {len(angle_axis)}).')
 
         self.__rotation = Rotation.from_rotvec(np.array(angle_axis))
 
-    def from_euler(self, sequence: str = None, angles: np.ndarray|list = None, degrees: bool = True) -> None:
+    def from_euler(self, sequence: str = None, angles: Union[np.ndarray, list] = None, degrees: bool = True) -> None:
         '''
         The `from_euler` function set the `self.__rotation` member from the value(s) of
         the inputs `sequence` and `angles`. The angle will be converted from degrees to
@@ -108,15 +110,15 @@ class ER:
         Parameters
         ----------
         - `sequence` (`str`): Sequence of euler angles (e.g. 'xyz', 'xy', 'zyx')
-        - `angles` (`np.ndarray|list`): List of euler angles
+        - `angles` (`Union[np.ndarray, list]`): List of euler angles
         - `degrees` (`bool`): Set to true if input angles are in degrees (default: `True`)
         '''
         if angles is None:
-            raise ValueError(f'Input angles cannot be None.')
+            raise ValueError('Input angles cannot be None.')
 
         if self.__dim == 3:
             if sequence is None:
-                raise ValueError(f'Input sequence cannot be None.')
+                raise ValueError('Input sequence cannot be None.')
 
             self.__rotation = Rotation.from_euler(sequence, np.array(angles), degrees)
 
@@ -164,7 +166,7 @@ class ER:
         '''
         return self.__rotation.as_rotvec()
 
-    def as_euler(self, sequence: str = None, degrees: bool = True) -> np.ndarray|float:
+    def as_euler(self, sequence: str = None, degrees: bool = True) -> Union[np.ndarray, float]:
         '''
         Return the stored `self.__rotation` member in euler angles.
 
@@ -175,16 +177,15 @@ class ER:
 
         Returns
         -------
-        - `np.ndarray|float`: Euler angle(s) (if `RE` is in 2D then only a float will be returned)
+        - `Union[np.ndarray, float]`: Euler angle(s) (if `RE` is in 2D then only a float will be returned)
         '''
         if self.__dim == 3:
             if sequence is None:
-                raise ValueError(f'Input sequence cannot be None.')
+                raise ValueError('Input sequence cannot be None.')
 
             return self.__rotation.as_euler(sequence, degrees)
 
-        elif self.__dim == 2:
-            return self.__rotation.as_euler('z', degrees)[0]
+        return self.__rotation.as_euler('z', degrees)[0]
 
     def yaw(self, degrees: bool = True) -> float:
         '''
@@ -201,7 +202,7 @@ class ER:
         - `float`: Yaw angle (in specified units)
         '''
         if self.__dim == 2:
-            raise AttributeError(f'Unable to return yaw angle of 2D rotation (Call as_euler() instead).')
+            raise AttributeError('Unable to return yaw angle of 2D rotation (Call as_euler() instead).')
 
         return self.__rotation.as_euler('xyz', degrees)[2]
 
@@ -220,7 +221,7 @@ class ER:
         - `float`: Pitch angle (in specified units)
         '''
         if self.__dim == 2:
-            raise AttributeError(f'Unable to return pitch angle of 2D rotation (Call as_euler() instead).')
+            raise AttributeError('Unable to return pitch angle of 2D rotation (Call as_euler() instead).')
 
         return self.__rotation.as_euler('xyz', degrees)[1]
 
@@ -239,12 +240,12 @@ class ER:
         - `float`: Roll angle (in specified units)
         '''
         if self.__dim == 2:
-            raise AttributeError(f'Unable to return roll angle of 2D rotation (Call as_euler() instead).')
+            raise AttributeError('Unable to return roll angle of 2D rotation (Call as_euler() instead).')
 
         return self.__rotation.as_euler('xyz', degrees)[0]
 
     # Computation functions
-    def apply(self, input: np.ndarray|list) -> np.ndarray:
+    def apply(self, input_element: Union[np.ndarray, list]) -> np.ndarray:
         '''
         The `apply` function applies this rotation to `input` vector.
 
@@ -252,19 +253,19 @@ class ER:
 
         Parameters
         ----------
-        - `input` (`np.ndarray|list`): Input vector to be rotated
+        - `input` (`Union[np.ndarray, list]`): Input vector to be rotated
 
         Returns
         -------
         - `np.ndarray`: Rotated vector
         '''
-        input = np.array(input)
+        input_element = np.array(input_element)
 
         # Check shape of input
-        if input.shape[0] != self.__dim:
-            raise ValueError(f'Input shape mismatch: self.__dim ({self.__dim}) != input.shape ({input.shape[0]})')
+        if input_element.shape[0] != self.__dim:
+            raise ValueError(f'Input shape mismatch: self.__dim ({self.__dim}) != input.shape ({input_element.shape[0]})')
 
-        return self.__rotation.apply(input)
+        return self.__rotation.apply(input_element)
 
     # Operator overloading
     def __str__(self) -> str:
@@ -282,16 +283,16 @@ class ER:
         if isinstance(other, ER):
             return np.allclose(self.as_quat(),
                                other.as_quat(),
-                               rtol=RE_TOLERANCE,
-                               atol=RE_TOLERANCE)
-        else:
-            raise TypeError(f'Input parameter is {type(other)}, not RE as expected.')
+                               rtol=ER_TOLERANCE,
+                               atol=ER_TOLERANCE)
+
+        raise TypeError(f'Input parameter is {type(other)}, not RE as expected.')
 
     def __ne__(self, other):
         if isinstance(other, ER):
             return not np.allclose(self.as_quat(),
                                    other.as_quat(),
-                                   rtol=RE_TOLERANCE,
-                                   atol=RE_TOLERANCE)
-        else:
-            raise TypeError(f'Input parameter is {type(other)}, not RE as expected.')
+                                   rtol=ER_TOLERANCE,
+                                   atol=ER_TOLERANCE)
+
+        raise TypeError(f'Input parameter is {type(other)}, not RE as expected.')

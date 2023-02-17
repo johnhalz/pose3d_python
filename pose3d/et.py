@@ -1,11 +1,12 @@
 import numpy as np
+from typing import Union
 
 from .utils import valid_dim
 
 class ET:
-    def __init__(self, name: str = '', dim: int = 3, vector: np.ndarray|list = None) -> None:
+    def __init__(self, name: str = '', dim: int = 3, vector: Union[np.ndarray, list] = None) -> None:
         '''
-        The `__init__` function is called when a new instance of the `TE` class is created.
+        The `__init__` function is called when a new instance of the `ET` class is created.
         It initializes all of the variables in the class and sets them to their default values.
 
         By default, the `self.__vector` member value is set to zero.
@@ -35,7 +36,7 @@ class ET:
         '''
         self.from_vector(np.random.rand(self.__dim))
 
-    def from_vector(self, vector: np.ndarray|list) -> None:
+    def from_vector(self, vector: Union[np.ndarray, list]) -> None:
         '''
         The `from_vector` function sets the `self.__vector` to the input vector.
 
@@ -43,7 +44,7 @@ class ET:
 
         Parameters
         ----------
-        - `vector` (`np.ndarray|list`): Input vector
+        - `vector` (`Union[np.ndarray, list]`): Input vector
         '''
         vector = np.array(vector)
         if vector.shape != self.__vector.shape:
@@ -61,9 +62,10 @@ class ET:
         '''
         The `inv` function sets the `self.__vector` member to its inverse (negative value).
         '''
-        self.from_vector(-self.vector())
+        self.from_vector(-self.vector)
 
     # Getter functions
+    @property
     def dim(self) -> int:
         '''
         Return the number of dimensions.
@@ -74,6 +76,7 @@ class ET:
         '''
         return self.__dim
 
+    @property
     def vector(self) -> np.ndarray:
         '''
         Return the value of the `self.__vector` member.
@@ -84,6 +87,7 @@ class ET:
         '''
         return self.__vector
 
+    @property
     def x(self) -> float:
         '''
         Return the first element of the `self.__vector` member.
@@ -92,8 +96,9 @@ class ET:
         -------
         - `float`: First element of the `self.__vector` member
         '''
-        return float(self.vector()[0])
+        return float(self.vector[0])
 
+    @property
     def y(self) -> float:
         '''
         Return the second element of the `self.__vector` member.
@@ -102,101 +107,96 @@ class ET:
         -------
         - `float`: Second element of the `self.__vector` member
         '''
-        return float(self.vector()[1])
+        return float(self.vector[1])
 
+    @property
     def z(self) -> float:
         '''
         Return the third element of the `self.__vector` member.
 
-        Note: This function will only work for `TE` classes set to 3 dimensions.
+        Note: This function will only work for `ET` classes set to 3 dimensions.
 
         Returns
         -------
         - `float`: Third element of the `self.__vector` member
         '''
-        return float(self.vector()[2])
+        return float(self.vector[2])
 
     # Operator overloads
     def __str__(self) -> str:
-        return f'ET{self.__dim} - {self.name}: {self.vector()}'
+        return f'ET{self.__dim} - {self.name}: {self.vector}'
 
     def __repr__(self) -> str:
-        return f'{self.vector()}'
+        return f'{self.vector}'
 
     def __add__(self, other):
         if isinstance(other, ET):
-            if other.vector().shape == self.vector().shape:
+            if other.vector.shape == self.vector.shape:
                 return ET(name=f'Sum of {self.name} and {other.name}',
-                          vector=self.vector() + other.vector())
+                          vector=self.vector + other.vector)
 
         elif isinstance(other, np.ndarray):
-            if other.shape == self.vector().shape:
+            if other.shape == self.vector.shape:
                 return ET(name=self.name,
-                           vector=self.vector() + other)
+                           vector=self.vector + other)
 
-        else:
-            raise TypeError(f'Input parameter is {type(other)}, not TE or np.ndarray as expected.')
+        raise TypeError(f'Input parameter is {type(other)}, not ET or np.ndarray as expected.')
 
     def __sub__(self, other):
         if isinstance(other, ET):
-            if other.vector().shape == self.vector().shape:
+            if other.vector().shape == self.vector.shape:
                 return ET(name=f'Sum of {self.name} and {other.name}',
-                          vector=self.vector() - other.vector())
+                          vector=self.vector - other.vector())
 
         elif isinstance(other, np.ndarray):
-            if other.shape == self.vector().shape:
+            if other.shape == self.vector.shape:
                 return ET(name=self.name,
-                           vector=self.vector() - other)
+                           vector=self.vector - other)
 
-        else:
-            raise TypeError(f'Input parameter is {type(other)}, not TE or np.ndarray as expected.')
+        raise TypeError(f'Input parameter is {type(other)}, not ET or np.ndarray as expected.')
 
     def __iadd__(self, other):
         if isinstance(other, ET):
-            if other.vector().shape == self.vector().shape:
-                self.from_vector(self.vector() + other.vector())
+            if other.vector().shape == self.vector.shape:
+                self.from_vector(self.vector + other.vector())
 
         elif isinstance(other, np.ndarray):
-            if other.shape == self.vector().shape:
-                self.from_vector(self.vector() + other)
+            if other.shape == self.vector.shape:
+                self.from_vector(self.vector + other)
 
-        else:
-            raise TypeError(f'Input parameter is {type(other)}, not TE or np.ndarray as expected.')
+        raise TypeError(f'Input parameter is {type(other)}, not ET or np.ndarray as expected.')
 
     def __isub__(self, other):
         if isinstance(other, ET):
-            if other.vector().shape == self.vector().shape:
-                self.from_vector(self.vector() - other.vector())
+            if other.vector().shape == self.vector.shape:
+                self.from_vector(self.vector - other.vector())
 
         elif isinstance(other, np.ndarray):
-            if other.shape == self.vector().shape:
-                self.from_vector(self.vector() - other)
+            if other.shape == self.vector.shape:
+                self.from_vector(self.vector - other)
 
-        else:
-            raise TypeError(f'Input parameter is {type(other)}, not TE or np.ndarray as expected.')
+        raise TypeError(f'Input parameter is {type(other)}, not ET or np.ndarray as expected.')
 
     def __eq__(self, other):
         if isinstance(other, ET):
-            return np.array_equal(self.vector(), other.vector())
+            return np.array_equal(self.vector, other.vector())
 
         elif isinstance(other, np.ndarray):
-            return np.array_equal(self.vector(), other)
+            return np.array_equal(self.vector, other)
 
-        else:
-            raise TypeError(f'Input parameter is {type(other)}, not TE or np.ndarray as expected.')
+        raise TypeError(f'Input parameter is {type(other)}, not ET or np.ndarray as expected.')
 
     def __ne__(self, other):
         if isinstance(other, ET):
-            return not np.array_equal(self.vector(), other.vector())
+            return not np.array_equal(self.vector, other.vector())
 
         elif isinstance(other, np.ndarray):
-            return not np.array_equal(self.vector(), other)
+            return not np.array_equal(self.vector, other)
 
-        else:
-            raise TypeError(f'Input parameter is {type(other)}, not TE or np.ndarray as expected.')
+        raise TypeError(f'Input parameter is {type(other)}, not ET or np.ndarray as expected.')
 
     def __neg__(self):
-        self.from_vector(-self.vector())
+        self.from_vector(-self.vector)
 
     def __abs__(self):
-        self.from_vector(abs(self.vector()))
+        self.from_vector(abs(self.vector))

@@ -2,15 +2,17 @@ import toml
 import numpy as np
 from pathlib import Path
 
+from typing import Union
+
 from .utils import VALID_ROTATION_TYPES
 from .pose import Pose
 from .transform import Transform
 
 
 class TransformSet:
-    def __init__(self, transf_set: str|Path|dict) -> None:
+    def __init__(self, transf_set: Union[str, Path, dict]) -> None:
 
-        self.frames = dict()
+        self.frames = {}
         if isinstance(transf_set, str) or isinstance(transf_set, Path):
             path = Path(transf_set)
             if not path.exists():
@@ -30,10 +32,10 @@ class TransformSet:
             base_frame.position.zero()
             base_frame.orientation.identity()
             self.frames['base'] = base_frame
-        
+
 
     # Setter methods
-    def add_frame(self, frame_name: str, frame_data: dict|Pose) -> None:
+    def add_frame(self, frame_name: str, frame_data: Union[dict, Pose]) -> None:
         '''
         Add frame to transform set.
 
@@ -63,11 +65,11 @@ class TransformSet:
             if orientation_type == 'euler':
                 new_frame.orientation.from_euler('xyz', orientation_value, degrees=degrees)
             elif orientation_type == 'quaternion':
-                new_frame.rotation.from_quat(orientation_value)
+                new_frame.orientation.from_quat(orientation_value)
             elif orientation_type == 'angle-axis':
-                new_frame.rotation.from_angle_axis(orientation_value)
+                new_frame.orientation.from_angle_axis(orientation_value)
             elif orientation_type == 'matrix':
-                new_frame.rotation.from_matrix(orientation_value)
+                new_frame.orientation.from_matrix(orientation_value)
             else:
                 raise ValueError(f'TransformSet - Invalid rotation type: {orientation_type}. Rotation type must be: {VALID_ROTATION_TYPES}')
 
@@ -87,7 +89,7 @@ class TransformSet:
         return self.frames.keys()
 
 
-    def change_frame(self, input, from_frame: str, to_frame: str) -> np.ndarray:
+    def change_frame(self, input_element, from_frame: str, to_frame: str) -> np.ndarray:
         '''
         Coordinate transformation of a pose (6D vector) from origin frame to target frame.
 
@@ -108,7 +110,7 @@ class TransformSet:
         # Create compound transformation
         transformation = self.__create_compound_transf(from_frame=from_frame, to_frame=to_frame)
 
-        return transformation.apply(input)
+        return transformation.apply(input_element)
 
 
     def wrench_change_frame(self, wrench: np.ndarray, from_frame: str, to_frame: str) -> np.ndarray:
@@ -129,8 +131,8 @@ class TransformSet:
         - `np.ndarray`: Transformed wrench array
         '''
         # Verify input
-        if not np.array(wrench).shape == (6,):
-            raise ValueError(f"TransformSet - Invalid wrench input. Shape must be (6,)")
+        if np.array(wrench).shape != (6,):
+            raise ValueError('TransformSet - Invalid wrench input. Shape must be (6,)')
 
         # Create compound transformation
         transformation = self.__create_compound_transf(from_frame=from_frame, to_frame=to_frame)
