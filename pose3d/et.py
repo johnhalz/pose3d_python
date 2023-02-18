@@ -122,6 +122,44 @@ class ET:
         '''
         return float(self.vector[2])
 
+    # Setter functions
+    def random(self) -> None:
+        '''
+        The `random` function sets the `self.__vector` member to a random state.
+        '''
+        self.vector = np.random.uniform(0, 1, size=self.vector.shape)
+
+    @vector.setter
+    def vector(self, vector: Union[np.ndarray, list]) -> None:
+        '''
+        The `vector` function sets the `self.__vector` to the input vector.
+
+        The function also checks whether the input dimension matches the class dimension.
+
+        Parameters
+        ----------
+        - `vector` (`Union[np.ndarray, list]`): Input vector
+        '''
+        if isinstance(vector, list):
+            vector = np.array(vector)
+
+        if vector.shape != self.__vector.shape:
+            raise ValueError(f'Input vector dimension ({vector.shape[0]}) does not match the set dimension ({self.__vector.shape[0]}).')
+
+        self.__vector = vector
+
+    def zero(self) -> None:
+        '''
+        The `zero` function sets the `self.__vector` to zero.
+        '''
+        self.vector = np.zeros(self.dim)
+
+    def inv(self) -> None:
+        '''
+        The `inv` function sets the `self.__vector` member to its inverse (negative value).
+        '''
+        self.vector = -self.vector
+
     # Operator overloads
     def __str__(self) -> str:
         return f'ET{self.__dim} - {self.name}: {self.vector}'
