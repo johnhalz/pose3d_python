@@ -29,41 +29,6 @@ class ET:
                 self.__dim = len(vector)
                 self.__vector = np.array(vector)
 
-    # Setter functions
-    def random(self) -> None:
-        '''
-        The `random` function sets the `self.__vector` member to a random state.
-        '''
-        self.from_vector(np.random.rand(self.__dim))
-
-    def from_vector(self, vector: Union[np.ndarray, list]) -> None:
-        '''
-        The `from_vector` function sets the `self.__vector` to the input vector.
-
-        The function also checks whether the input dimension matches the class dimension.
-
-        Parameters
-        ----------
-        - `vector` (`Union[np.ndarray, list]`): Input vector
-        '''
-        vector = np.array(vector)
-        if vector.shape != self.__vector.shape:
-            raise ValueError(f'Input vector dimension ({vector.shape[0]}) does not match the set dimension ({self.__vector.shape[0]}).')
-
-        self.__vector = vector
-
-    def zero(self) -> None:
-        '''
-        The `zero` function sets the `self.__vector` to zero.
-        '''
-        self.from_vector(np.zeros(self.__dim))
-
-    def inv(self) -> None:
-        '''
-        The `inv` function sets the `self.__vector` member to its inverse (negative value).
-        '''
-        self.from_vector(-self.vector)
-
     # Getter functions
     @property
     def dim(self) -> int:
@@ -184,7 +149,7 @@ class ET:
         if isinstance(other, ET):
             if other.vector().shape == self.vector.shape:
                 return ET(name=f'Sum of {self.name} and {other.name}',
-                          vector=self.vector - other.vector())
+                          vector=self.vector - other.vector)
 
         elif isinstance(other, np.ndarray):
             if other.shape == self.vector.shape:
@@ -194,30 +159,31 @@ class ET:
         raise TypeError(f'Input parameter is {type(other)}, not ET or np.ndarray as expected.')
 
     def __iadd__(self, other):
+        if not isinstance(other, (ET, np.ndarray)):
+            raise TypeError(f'Input parameter is {type(other)}, not ET or np.ndarray as expected.')
+
         if isinstance(other, ET):
-            if other.vector().shape == self.vector.shape:
-                self.from_vector(self.vector + other.vector())
+            if other.vector.shape == self.vector.shape:
+                self.vector = self.vector + other.vector
 
         elif isinstance(other, np.ndarray):
             if other.shape == self.vector.shape:
-                self.from_vector(self.vector + other)
-
-        raise TypeError(f'Input parameter is {type(other)}, not ET or np.ndarray as expected.')
+                self.vector = self.vector + other
 
     def __isub__(self, other):
         if isinstance(other, ET):
             if other.vector().shape == self.vector.shape:
-                self.from_vector(self.vector - other.vector())
+                self.vector = self.vector - other.vector
 
         elif isinstance(other, np.ndarray):
             if other.shape == self.vector.shape:
-                self.from_vector(self.vector - other)
+                self.vector = self.vector - other
 
         raise TypeError(f'Input parameter is {type(other)}, not ET or np.ndarray as expected.')
 
     def __eq__(self, other):
         if isinstance(other, ET):
-            return np.array_equal(self.vector, other.vector())
+            return np.array_equal(self.vector, other.vector)
 
         elif isinstance(other, np.ndarray):
             return np.array_equal(self.vector, other)
@@ -226,7 +192,7 @@ class ET:
 
     def __ne__(self, other):
         if isinstance(other, ET):
-            return not np.array_equal(self.vector, other.vector())
+            return not np.array_equal(self.vector, other.vector)
 
         elif isinstance(other, np.ndarray):
             return not np.array_equal(self.vector, other)
@@ -234,7 +200,7 @@ class ET:
         raise TypeError(f'Input parameter is {type(other)}, not ET or np.ndarray as expected.')
 
     def __neg__(self):
-        self.from_vector(-self.vector)
+        self.vector = -self.vector
 
     def __abs__(self):
-        self.from_vector(abs(self.vector))
+        self.vector = abs(self.vector)

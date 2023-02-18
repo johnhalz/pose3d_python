@@ -5,7 +5,7 @@ from typing import Tuple
 from .utils import valid_dim
 
 class Pose:
-    def __init__(self, name: str = '', te_dim: int = 3, re_dim: int = 3) -> None:
+    def __init__(self, name: str = '', et_dim: int = 3, er_dim: int = 3) -> None:
         '''
         The `__init__` function is called when a new instance of the `Pose` class is created.
         It initializes all of the variables in the class and sets them to their default values.
@@ -13,16 +13,16 @@ class Pose:
         Parameters
         ----------
         - `name` (`str`): Set the name of the object (default: '')
-        - `te_dim` (`int`): Set the dimension of the position member (default: 3)
-        - `re_dim` (`int`): Set the dimension of the orientation member (default: 3)
+        - `et_dim` (`int`): Set the dimension of the position member (default: 3)
+        - `er_dim` (`int`): Set the dimension of the orientation member (default: 3)
         '''
         self.name = name
 
-        if valid_dim(te_dim):
-            self.position = ET(dim=te_dim)
+        if valid_dim(et_dim):
+            self.position = ET(dim=et_dim)
 
-        if valid_dim(re_dim):
-            self.orientation = ER(dim=re_dim)
+        if valid_dim(er_dim):
+            self.orientation = ER(dim=er_dim)
 
     # Setter functions
     def random(self) -> None:

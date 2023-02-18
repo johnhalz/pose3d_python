@@ -55,7 +55,7 @@ class TransformSet:
             new_frame = Pose(name=frame_name)
 
             # Extract position
-            new_frame.position.from_vector(frame_data['position'])
+            new_frame.position.vector = frame_data['position']
 
             # Extract orientation
             orientation_value = frame_data['orientation']

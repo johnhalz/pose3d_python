@@ -37,15 +37,15 @@ class Transform:
             raise AttributeError(f'Number of dimensions between both poses do not match: pose_1.dims() = {pose_1.dims()} and pose_2.dims = {pose_2.dims()}.')
 
         # Modify dimension of transformation depending on pose_1 and pose_2
-        if pose_1.position.dim() != self.translation.dim:
+        if pose_1.position.dim != self.translation.dim:
             self.translation = ET(dim=pose_1.position.dim)
 
-        if pose_1.orientation.dim() != self.rotation.dim:
+        if pose_1.orientation.dim != self.rotation.dim:
             self.rotation = ER(dim=pose_1.orientation.dim)
 
         # Compute rotation from pose_1 to pose_2
-        self.rotation.from_matrix(np.linalg.inv(pose_2.orientation.as_matrix()) * pose_1.orientation.as_matrix())
-        self.translation.from_vector(pose_2.position.vector - pose_1.position.vector)
+        self.rotation.from_matrix(np.dot(np.linalg.inv(pose_2.orientation.as_matrix()), pose_1.orientation.as_matrix()))
+        self.translation.vector = pose_2.position.vector - pose_1.position.vector
 
     def identity(self) -> None:
         '''
@@ -58,8 +58,8 @@ class Transform:
         '''
         Set the transformation it's inverse.
         '''
-        self.rotation = self.rotation.inv()
-        self.translation.from_vector(-self.rotation.apply(self.translation.vector))
+        self.rotation.inv()
+        self.translation.vector = -self.rotation.apply(self.translation.vector)
 
     def random(self) -> None:
         '''
@@ -99,35 +99,39 @@ class Transform:
         return matrix
 
     # Computation functions
-    def apply(self, input_element: Union[Pose, np.ndarray]) -> Union[Pose, np.ndarray]:
+    def apply(self, io_element: Union[Pose, np.ndarray]) -> Union[Pose, np.ndarray]:
         '''
         Apply transformation to `io`.
 
         Parameters
         ----------
-        - `io` (`Pose | np.ndarray`): Element to apply transformation to
+        - `io_element` (`Union[Pose, np.ndarray]`): Element to apply transformation to
 
         Returns
         -------
-        - `Pose|np.ndarray`: Output pose/vector
+        - `Union[Pose, np.ndarray]`: Output pose/vector
         '''
+        # If io_element is a Pose
+        if isinstance(io_element, Pose):
+            output = Pose(et_dim=io_element.position.dim, er_dim=io_element.orientation.dim)
+            output.position.vector = io_element.position.vector
+            output.orientation.from_quat(io_element.orientation.as_quat())
 
-        # If io is a Pose
-        if isinstance(input_element, Pose):
-            input_element.orientation.from_matrix(np.matmul(self.rotation.as_matrix(), input_element.orientation.as_matrix()))
-            input_element.position += self.translation
+            output.orientation.from_matrix(np.dot(self.rotation.as_matrix(), output.orientation.as_matrix()))
+            output.position.vector = self.rotation.apply(output.position.vector) + self.translation.vector
 
-        # If io is a numpy vector
-        if isinstance(input_element, np.ndarray):
-            input_element = self.rotation.apply(input_element) + self.translation
+        # If io_element is a numpy vector
+        if isinstance(io_element, np.ndarray):
+            output = io_element.copy()
+            output = self.rotation.apply(output) + self.translation.vector
 
-        return input_element
+        return output
 
     # Operator overloads
     def __repr__(self) -> str:
         return f'''Transform - {self.name}:
-        Position:    {self.translation.__repr__}
-        Orientation: {self.rotation.__repr__}'''
+        Translation: {self.translation.__repr__}
+        Rotation:    {self.rotation.__repr__}'''
 
     def __str__(self) -> str:
         return f'Translation: {self.translation.__repr__}\nRotation:    {self.rotation.__repr__}'
