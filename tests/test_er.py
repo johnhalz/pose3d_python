@@ -61,7 +61,6 @@ def test_ER_from_matrix():
     er.from_matrix(er2.as_matrix())
     assert np.allclose(er2.as_matrix(), er.as_matrix())
 
-
 def test_ER_from_angle_axis():
     # Test 3D rotation
     er = ER(dim=3)

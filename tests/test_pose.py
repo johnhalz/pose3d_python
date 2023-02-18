@@ -9,7 +9,7 @@ from pose3d import Pose
 
 @pytest.fixture
 def pose():
-    return Pose(name='Test', te_dim=3, re_dim=3)
+    return Pose(name='Test', et_dim=3, er_dim=3)
 
 def test_pose_init(pose):
     assert pose.name == 'Test'
