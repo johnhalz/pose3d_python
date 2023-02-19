@@ -1,6 +1,9 @@
 ER_TOLERANCE = 1e-10
 ET_TOLERANCE = 1e-10
 
+ET_VALID_DIMS = [2, 3]
+ER_VALID_DIMS = [2, 3]
+
 def valid_dim(input_dim: int) -> bool:
     '''
     Check if an imput dimension value is valid for `pose3d` application
