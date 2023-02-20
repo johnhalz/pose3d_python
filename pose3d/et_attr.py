@@ -6,26 +6,33 @@ from .utils import ET_VALID_DIMS
 
 def list_to_array(lst: list):
     '''Convert list to numpy array.'''
-    return np.array([float(element) for element in lst])
+    return np.array(lst, dtype=float)
 
-def validate_vector_shape(instance, attribute, value, only_first: bool = False):
+def validate_vector_shape(instance, _attribute, value, only_first: bool = False):
     '''Validate shape of a vector for the ET class.'''
     if value.shape[0] not in ET_VALID_DIMS:
         raise ValueError(f"Vector shape must be one of the following: {ET_VALID_DIMS}.")
 
     if not only_first:
         if value.shape != instance.vector.shape:
-            raise ValueError(f"Vector shape must be equal to current attribute shape {instance.vector.shape}")
+            raise ValueError(f"Vector shape must be equal to current attribute \
+                shape {instance.vector.shape}")
 
 @attr.define
 class ETAttr:
-    name: str = attr.field(default='', eq=False, repr=True, validator=attr.validators.instance_of(str))
+    name: str = attr.field(
+        default='',
+        eq=False,
+        repr=True,
+        validator=attr.validators.instance_of(str)
+    )
     vector: np.array = attr.field(
         default=np.zeros(shape=(3,)),
         eq=attr.cmp_using(eq=np.allclose),
         repr=True,
         validator=validate_vector_shape,
-        converter=list_to_array)
+        converter=list_to_array
+    )
 
     @classmethod
     def in_dim(cls, *, dim: int, name: str = ''):

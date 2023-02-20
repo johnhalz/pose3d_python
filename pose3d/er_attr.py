@@ -1,53 +1,45 @@
 from typing import Union
-import attr
+import attrs
 
 import numpy as np
 from scipy.spatial.transform import Rotation
 
 from .utils import ER_VALID_DIMS
 
-def validate_rotation_dim(dim_value: int):
-    '''Validate input dimension'''
-    if dim_value not in ER_VALID_DIMS:
-        raise ValueError(f'Input dimension {dim_value} is not accepted. Please use one of the \
-            following: {ER_VALID_DIMS}.')
-
-@attr.define
+@attrs.define
 class ERAttr:
-    name: str = attr.field(
+    name: str = attrs.field(
         default='',
         eq=False,
         repr=True,
-        validator=attr.validators.instance_of(str)
+        validator=attrs.validators.instance_of(str)
     )
-    dim : int = attr.field(
+    dim : int = attrs.field(
         default=3,
-        eq=True,
         repr=True,
-        validator=validate_rotation_dim
+        validator=attrs.validators.instance_of(int)
     )
-    _rotation: Rotation = attr.field(
-        default=Rotation(quat=[0., 0., 0., 1.]),
-        eq=True,
+    _rotation: Rotation = attrs.field(
+        default=Rotation.identity(),
         repr=True
     )
 
     # Setter functions
     def identity(self) -> None:
         '''Set rotation to identity.'''
-        self._rotation.identity()
+        self._rotation = Rotation.identity()
 
     def inv(self) -> None:
         '''Invert rotation.'''
-        self._rotation.inv()
+        self._rotation = self._rotation.inv()
 
     def random(self) -> None:
         '''Set the rotation to a random value.'''
         if self.dim == 2:
-            self._rotation.from_euler('z', np.random.uniform(0, 360))
+            self._rotation = Rotation.from_euler('z', np.random.uniform(0, 360))
 
         else:
-            self._rotation.random()
+            self._rotation = Rotation.random()
 
     def from_quat(self, quat: Union[np.ndarray, list]) -> None:
         '''
@@ -62,7 +54,7 @@ class ERAttr:
         if self.dim == 2:
             raise AttributeError('Unable to set 2D rotation from quaternion input.')
 
-        self._rotation.from_quat(quat)
+        self._rotation = Rotation.from_quat(quat)
 
     def from_matrix(self, matrix: Union[np.ndarray, list]) -> None:
         '''
@@ -82,7 +74,7 @@ class ERAttr:
             eye_matrix[:2, :2] = matrix
             matrix = eye_matrix
 
-        self._rotation.from_matrix(matrix)
+        self._rotation = Rotation.from_matrix(matrix)
 
     def from_angle_axis(self, angle_axis: Union[np.ndarray, list]) -> None:
         '''
@@ -98,7 +90,7 @@ class ERAttr:
             raise AttributeError('Unable to set 2D rotation from angle-axis input.')
 
         angle_axis = np.array(angle_axis)
-        self._rotation.from_rotvec(angle_axis / np.linalg.norm(angle_axis))
+        self._rotation = Rotation.from_rotvec(angle_axis / np.linalg.norm(angle_axis))
 
     def from_euler(self, sequence: str = None, angles: Union[np.ndarray, list] = None,
         degrees: bool = True) -> None:
@@ -116,15 +108,17 @@ class ERAttr:
             if sequence is None:
                 raise ValueError('Input sequence cannot be None.')
 
-            self._rotation.from_euler(sequence, np.array(angles), degrees)
+            self._rotation = Rotation.from_euler(sequence, np.array(angles), degrees)
 
         elif self.dim == 2:
-            self._rotation.from_euler('z', np.array(angles), degrees)
+            self._rotation = Rotation.from_euler('z', np.array(angles), degrees)
 
     # Getter functions
     def as_quat(self) -> np.ndarray:
         '''
         Return the stored `self.__rotation` member in quaternion form.
+
+        Order of the quaternion is: (i, j, k, w)
 
         Returns
         -------
@@ -281,3 +275,20 @@ class ERAttr:
             return result[:2]
 
         return result
+
+    # Other methods
+    @dim.validator
+    def _validate_rotation_dim(self, _attrsibute, dim_value: int):
+        '''Validate input dimension'''
+        if dim_value not in ER_VALID_DIMS:
+            raise ValueError(f'Input dimension {dim_value} is not accepted. Please use one of the \
+                following: {ER_VALID_DIMS}.')
+
+    def __eq__(self, other: object) -> bool:
+        if other.dim != self.dim:
+            return False
+
+        if not np.allclose(self.as_quat(), other.as_quat()):
+            return False
+
+        return True
