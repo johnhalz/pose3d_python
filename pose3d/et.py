@@ -1,76 +1,76 @@
+import attr
+
 import numpy as np
-from typing import Union
 
-from .utils import valid_dim
+from .utils import ET_VALID_DIMS
 
+def list_to_array(lst: list):
+    '''Convert list to numpy array.'''
+    return np.array(lst, dtype=float)
+
+def validate_vector_shape(instance, _attribute, value, only_first: bool = False):
+    '''Validate shape of a vector for the ET class.'''
+    if value.shape[0] not in ET_VALID_DIMS:
+        raise ValueError(f"Vector shape must be one of the following: {ET_VALID_DIMS}.")
+
+    if not only_first:
+        if value.shape != instance.vector.shape:
+            raise ValueError(f"Vector shape must be equal to current attribute \
+                shape {instance.vector.shape}")
+
+@attr.define
 class ET:
-    def __init__(self, name: str = '', dim: int = 3, vector: Union[np.ndarray, list] = None) -> None:
-        '''
-        The `__init__` function is called when a new instance of the `ET` class is created.
-        It initializes all of the variables in the class and sets them to their default values.
+    name: str = attr.field(
+        default='',
+        eq=False,
+        repr=True,
+        validator=attr.validators.instance_of(str)
+    )
+    vector: np.array = attr.field(
+        default=np.zeros(shape=(3,)),
+        eq=attr.cmp_using(eq=np.allclose),
+        repr=True,
+        validator=validate_vector_shape,
+        converter=list_to_array
+    )
 
-        By default, the `self.__vector` member value is set to zero.
+    @classmethod
+    def in_dim(cls, *, dim: int, name: str = ''):
+        '''Init ET class with dimension value and name'''
+        vector = np.zeros(shape=(dim,))
+        validate_vector_shape(None, None, vector, True)
+        return cls(name=name, vector=vector)
 
-        Parameters
-        ----------
-        - `name` (`str`): Set the name of the object (default: '')
-        - `dim` (`int`): Set the dimension of the vector (default: 3)
-        - `vector` (`np.ndarray|list`): Set value of vector at `__init__` (default: `None`)
-        '''
-        self.name = name
-
-        if valid_dim(dim):
-            self.__dim = dim
-
-        if vector is None:
-            self.__vector = np.zeros(self.__dim)
-        else:
-            if valid_dim(len(vector)):
-                self.__dim = len(vector)
-                self.__vector = np.array(vector)
-
-    # Getter functions
     @property
     def dim(self) -> int:
         '''
-        Return the number of dimensions.
+        Return the diemnsion of the vector.
 
         Returns
         -------
-        - `int`: Value of `self.__dim` member
+        - `int`: Dimension of the vector
         '''
-        return self.__dim
-
-    @property
-    def vector(self) -> np.ndarray:
-        '''
-        Return the value of the `self.__vector` member.
-
-        Returns
-        -------
-        - `np.ndarray`: Value of `self.__vector` member
-        '''
-        return self.__vector
+        return self.vector.shape[0]
 
     @property
     def x(self) -> float:
         '''
-        Return the first element of the `self.__vector` member.
+        Return the first element of the `self.vector` member.
 
         Returns
         -------
-        - `float`: First element of the `self.__vector` member
+        - `float`: First element of the `self.vector` member
         '''
         return float(self.vector[0])
 
     @property
     def y(self) -> float:
         '''
-        Return the second element of the `self.__vector` member.
+        Return the second element of the `self.vector` member.
 
         Returns
         -------
-        - `float`: Second element of the `self.__vector` member
+        - `float`: Second element of the `self.vector` member
         '''
         return float(self.vector[1])
 
@@ -83,124 +83,24 @@ class ET:
 
         Returns
         -------
-        - `float`: Third element of the `self.__vector` member
+        - `float`: Third element of the `self.vector` member
         '''
         return float(self.vector[2])
 
-    # Setter functions
-    def random(self) -> None:
-        '''
-        The `random` function sets the `self.__vector` member to a random state.
-        '''
-        self.vector = np.random.uniform(0, 1, size=self.vector.shape)
-
-    @vector.setter
-    def vector(self, vector: Union[np.ndarray, list]) -> None:
-        '''
-        The `vector` function sets the `self.__vector` to the input vector.
-
-        The function also checks whether the input dimension matches the class dimension.
-
-        Parameters
-        ----------
-        - `vector` (`Union[np.ndarray, list]`): Input vector
-        '''
-        if isinstance(vector, list):
-            vector = np.array(vector)
-
-        if vector.shape != self.__vector.shape:
-            raise ValueError(f'Input vector dimension ({vector.shape[0]}) does not match the set dimension ({self.__vector.shape[0]}).')
-
-        self.__vector = vector
-
     def zero(self) -> None:
         '''
-        The `zero` function sets the `self.__vector` to zero.
+        The `zero` function sets the `self.vector` to zero.
         '''
         self.vector = np.zeros(self.dim)
 
     def inv(self) -> None:
         '''
-        The `inv` function sets the `self.__vector` member to its inverse (negative value).
+        The `inv` function sets the `self.vector` member to its inverse (negative value).
         '''
         self.vector = -self.vector
 
-    # Operator overloads
-    def __str__(self) -> str:
-        return f'ET{self.__dim} - {self.name}: {self.vector}'
-
-    def __repr__(self) -> str:
-        return f'{self.vector}'
-
-    def __add__(self, other):
-        if isinstance(other, ET):
-            if other.vector.shape == self.vector.shape:
-                return ET(name=f'Sum of {self.name} and {other.name}',
-                          vector=self.vector + other.vector)
-
-        elif isinstance(other, np.ndarray):
-            if other.shape == self.vector.shape:
-                return ET(name=self.name,
-                           vector=self.vector + other)
-
-        raise TypeError(f'Input parameter is {type(other)}, not ET or np.ndarray as expected.')
-
-    def __sub__(self, other):
-        if isinstance(other, ET):
-            if other.vector().shape == self.vector.shape:
-                return ET(name=f'Sum of {self.name} and {other.name}',
-                          vector=self.vector - other.vector)
-
-        elif isinstance(other, np.ndarray):
-            if other.shape == self.vector.shape:
-                return ET(name=self.name,
-                           vector=self.vector - other)
-
-        raise TypeError(f'Input parameter is {type(other)}, not ET or np.ndarray as expected.')
-
-    def __iadd__(self, other):
-        if not isinstance(other, (ET, np.ndarray)):
-            raise TypeError(f'Input parameter is {type(other)}, not ET or np.ndarray as expected.')
-
-        if isinstance(other, ET):
-            if other.vector.shape == self.vector.shape:
-                self.vector = self.vector + other.vector
-
-        elif isinstance(other, np.ndarray):
-            if other.shape == self.vector.shape:
-                self.vector = self.vector + other
-
-    def __isub__(self, other):
-        if isinstance(other, ET):
-            if other.vector().shape == self.vector.shape:
-                self.vector = self.vector - other.vector
-
-        elif isinstance(other, np.ndarray):
-            if other.shape == self.vector.shape:
-                self.vector = self.vector - other
-
-        raise TypeError(f'Input parameter is {type(other)}, not ET or np.ndarray as expected.')
-
-    def __eq__(self, other):
-        if isinstance(other, ET):
-            return np.array_equal(self.vector, other.vector)
-
-        elif isinstance(other, np.ndarray):
-            return np.array_equal(self.vector, other)
-
-        raise TypeError(f'Input parameter is {type(other)}, not ET or np.ndarray as expected.')
-
-    def __ne__(self, other):
-        if isinstance(other, ET):
-            return not np.array_equal(self.vector, other.vector)
-
-        elif isinstance(other, np.ndarray):
-            return not np.array_equal(self.vector, other)
-
-        raise TypeError(f'Input parameter is {type(other)}, not ET or np.ndarray as expected.')
-
-    def __neg__(self):
-        self.vector = -self.vector
-
-    def __abs__(self):
-        self.vector = abs(self.vector)
+    def random(self) -> None:
+        '''
+        The `random` function sets the `self.vector` member to a random state.
+        '''
+        self.vector = np.random.uniform(size=self.vector.shape)

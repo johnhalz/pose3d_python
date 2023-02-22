@@ -9,18 +9,18 @@ from .pose import Pose
 from .utils import valid_dim
 
 class Transform:
-    def __init__(self, name: str, orig: str = 'origin', dest: str = 'destination', te_dim: int = 3, re_dim: int = 3) -> None:
+    def __init__(self, name: str, orig: str = 'origin', dest: str = 'destination', et_dim: int = 3, er_dim: int = 3) -> None:
         # Set strings
         self.name = name
         self.origin = orig
         self.destination = dest
 
         # Init translation and rotation memebers
-        if valid_dim(te_dim):
-            self.translation = ET(dim = te_dim)
+        if valid_dim(et_dim):
+            self.translation = ET.in_dim(dim=et_dim)
 
-        if valid_dim(re_dim):
-            self.rotation = ER(dim = re_dim)
+        if valid_dim(er_dim):
+            self.rotation = ER(dim = er_dim)
 
     # Setter functions
     def between_poses(self, pose_1: Pose, pose_2: Pose) -> None:
@@ -38,7 +38,7 @@ class Transform:
 
         # Modify dimension of transformation depending on pose_1 and pose_2
         if pose_1.position.dim != self.translation.dim:
-            self.translation = ET(dim=pose_1.position.dim)
+            self.translation = ET.in_dim(dim=pose_1.position.dim)
 
         if pose_1.orientation.dim != self.rotation.dim:
             self.rotation = ER(dim=pose_1.orientation.dim)

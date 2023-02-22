@@ -10,12 +10,12 @@ from pose3d import ET
 # Fixtures
 @pytest.fixture
 def et():
-    return ET(dim=3)
+    return ET()
 
 # Tests
 def test_ET_constructor():
     et1 = ET()
-    et2 = ET(name="test", dim=2, vector=[1, 2])
+    et2 = ET(name="test", vector=[1, 2])
 
     assert et1.name == ''
     assert et1.dim == 3
@@ -26,7 +26,7 @@ def test_ET_constructor():
     assert np.all(et2.vector == np.array([1, 2]))
 
     with pytest.raises(ValueError):
-        et3 = ET(dim=4)
+        et3 = ET.in_dim(dim=4)
         et4 = ET(vector=[1, 2, 3, 4])
 
 def test_ET_random(et):

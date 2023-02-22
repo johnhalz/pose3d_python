@@ -19,7 +19,7 @@ class Pose:
         self.name = name
 
         if valid_dim(et_dim):
-            self.position = ET(dim=et_dim)
+            self.position = ET.in_dim(dim=et_dim)
 
         if valid_dim(er_dim):
             self.orientation = ER(dim=er_dim)
