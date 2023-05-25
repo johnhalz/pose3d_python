@@ -3,7 +3,7 @@ ET_TOLERANCE = 1e-10
 
 def valid_dim(input_dim: int) -> bool:
     '''
-    Check if an imput dimension value is valid for `pose3d` application
+    Check if an input dimension value is valid for `pose3d` application
 
     Parameters
     ----------

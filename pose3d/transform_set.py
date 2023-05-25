@@ -93,7 +93,7 @@ class TransformSet:
         '''
         Coordinate transformation of a pose (6D vector) from origin frame to target frame.
 
-        A compund transformation from origin frame (defined in `from_frame` argument) to
+        A compound transformation from origin frame (defined in `from_frame` argument) to
         the target frame (defined in `to_frame` argument) is computed and applied to the
         input pose.
 

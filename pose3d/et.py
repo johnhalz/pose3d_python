@@ -109,7 +109,9 @@ class ET:
             vector = np.array(vector)
 
         if vector.shape != self.__vector.shape:
-            raise ValueError(f'Input vector dimension ({vector.shape[0]}) does not match the set dimension ({self.__vector.shape[0]}).')
+            raise ValueError(
+                f'Input vector dimension ({vector.shape[0]}) does not match the set dimension ({self.__vector.shape[0]}).'
+            )
 
         self.__vector = vector
 

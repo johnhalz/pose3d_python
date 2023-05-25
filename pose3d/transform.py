@@ -15,7 +15,7 @@ class Transform:
         self.origin = orig
         self.destination = dest
 
-        # Init translation and rotation memebers
+        # Init translation and rotation members
         if valid_dim(te_dim):
             self.translation = ET(dim = te_dim)
 
@@ -26,7 +26,7 @@ class Transform:
     def between_poses(self, pose_1: Pose, pose_2: Pose) -> None:
         '''
         Compute transform between 2 3D poses. This instance of Transform
-        will be modifed to compute the transform from pose_1 to pose_2.
+        will be modified to compute the transform from pose_1 to pose_2.
 
         Parameters
         ----------
