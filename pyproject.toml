@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pose3d"
-version = "2.1.1a0"
+version = "2.1.1a1"
 description = "Transforming and handling 3D poses and frames."
 authors = ["John Halazonetis <john.halazonetis@icloud.com>"]
 license = "MIT"
