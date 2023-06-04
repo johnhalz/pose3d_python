@@ -34,7 +34,7 @@ jobs:
       - name: Install Dependencies with Poetry
         run: |
           poetry env use $(python --version 2>&1 | awk '{print $2}')
-          poetry install --without-dev
+          poetry install
 
       - name: Run tests with Poetry
         run: poetry run pytest
