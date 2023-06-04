@@ -3,7 +3,6 @@ name: Build and Deploy MkDocs
 on:
   push:
     branches:
-      - main
       - impl/github-workflows
 
 permissions:

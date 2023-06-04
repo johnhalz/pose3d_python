@@ -3,11 +3,10 @@ name: Python Test
 on:
   push:
     branches:
-      - main
       - impl/github-workflows
   pull_request:
     branches:
-      - main
+      - impl/github-workflows
 
 jobs:
   test:
