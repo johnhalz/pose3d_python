@@ -31,9 +31,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Install dependencies with Poetry
+      - name: Install Dependencies with Poetry
         run: |
-          poetry env use ${{ matrix.python-version }}
+          poetry env use $(python --version 2>&1 | awk '{print $2}')
           poetry install --without-dev
 
       - name: Run tests with Poetry
