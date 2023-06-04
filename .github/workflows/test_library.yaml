@@ -26,13 +26,15 @@ jobs:
       - name: Install Poetry
         run: |
           curl -sSL https://install.python-poetry.org | python -
-          python -m poetry config virtualenvs.create true
+          poetry config virtualenvs.create true
 
       - name: Checkout code
         uses: actions/checkout@v2
 
       - name: Install dependencies with Poetry
-        run: poetry install
+        run: |
+          poetry env use ${{ matrix.python-version }}
+          poetry install --without-dev
 
       - name: Run tests with Poetry
         run: poetry run pytest
