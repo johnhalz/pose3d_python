@@ -18,6 +18,11 @@ jobs:
         python-version: [3.8.x, 3.9.x, 3.10.x, 3.11.x]
 
     steps:
+      - name: Set up Node.js 16.x
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16.x
+
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v2
         with:
