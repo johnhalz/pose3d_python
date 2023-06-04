@@ -12,7 +12,7 @@ This library is freely available at the Python Package Index. You can install th
 pip install --upgrade pose3d
 ```
 
-## Developing
+## Developers
 This repo uses `poetry` as a dependency manager. You will need to download `poetry` onto your machine to be able to develop and push to this repo. You can install all required dependencies for development by running the command:
 
 ``` bash
