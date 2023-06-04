@@ -9,15 +9,17 @@
       
       
       
-        <link rel="prev" href="../comparing_poses/">
+        <link rel="prev" href="../er/">
       
+      
+        <link rel="next" href="../pose/">
       
       <link rel="icon" href="../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.4.3, mkdocs-material-9.1.15">
     
     
       
-        <title>Transformations - Pose Python</title>
+        <title>ET Class - Pose Python</title>
       
     
     
@@ -71,7 +73,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#transformations" class="md-skip">
+        <a href="#et-class" class="md-skip">
           Skip to content
         </a>
       
@@ -106,7 +108,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Transformations
+              ET Class
             
           </span>
         </div>
@@ -272,14 +274,16 @@
 
   
   
+    
+  
   
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
       
       
       
-      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
       
       
       
@@ -288,7 +292,7 @@
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
         <label class="md-nav__title" for="__nav_3">
           <span class="md-nav__icon md-icon"></span>
           API
@@ -301,115 +305,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../../API/er/" class="md-nav__link">
+      <a href="../er/" class="md-nav__link">
         ER Class
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../API/et/" class="md-nav__link">
-        ET Class
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../API/pose/" class="md-nav__link">
-        Pose Class
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../API/transform/" class="md-nav__link">
-        Transform
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../API/transform_set/" class="md-nav__link">
-        Transform Set
-      </a>
-    </li>
-  
-
-            
-          
-        </ul>
-      </nav>
-    </li>
-  
-
-    
-      
-      
-      
-
-  
-  
-    
-  
-  
-    
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
-      
-      
-      
-      
-      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
-      
-      
-      
-        <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
-          Theory
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
-        <label class="md-nav__title" for="__nav_4">
-          <span class="md-nav__icon md-icon"></span>
-          Theory
-        </label>
-        <ul class="md-nav__list" data-md-scrollfix>
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../comparing_poses/" class="md-nav__link">
-        Comparing Poses
       </a>
     </li>
   
@@ -432,12 +329,12 @@
       
       
         <label class="md-nav__link md-nav__link--active" for="__toc">
-          Transformations
+          ET Class
           <span class="md-nav__icon md-icon"></span>
         </label>
       
       <a href="./" class="md-nav__link md-nav__link--active">
-        Transformations
+        ET Class
       </a>
       
         
@@ -456,30 +353,85 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#transformations-inverse-transformations" class="md-nav__link">
-    Transformations &amp; Inverse Transformations
+  <a href="#description" class="md-nav__link">
+    Description
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#transforming-vectors" class="md-nav__link">
-    Transforming Vectors
+  <a href="#class-methods" class="md-nav__link">
+    Class Methods
+  </a>
+  
+    <nav class="md-nav" aria-label="Class Methods">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#etinit" class="md-nav__link">
+    ET.init
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#transforming-poses" class="md-nav__link">
-    Transforming Poses
+        
+          <li class="md-nav__item">
+  <a href="#etrandom" class="md-nav__link">
+    ET.random
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#transforming-forces-torques" class="md-nav__link">
-    Transforming Forces &amp; Torques
+        
+          <li class="md-nav__item">
+  <a href="#etfrom_vector" class="md-nav__link">
+    ET.from_vector
   </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#etzero" class="md-nav__link">
+    ET.zero
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#etinv" class="md-nav__link">
+    ET.inv
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#etvector" class="md-nav__link">
+    ET.vector
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#etx" class="md-nav__link">
+    ET.x
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ety" class="md-nav__link">
+    ET.y
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#etz" class="md-nav__link">
+    ET.z
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -487,6 +439,111 @@
   
 </nav>
       
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pose/" class="md-nav__link">
+        Pose Class
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../transform/" class="md-nav__link">
+        Transform
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../transform_set/" class="md-nav__link">
+        Transform Set
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+          Theory
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_4">
+          <span class="md-nav__icon md-icon"></span>
+          Theory
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Theory/comparing_poses/" class="md-nav__link">
+        Comparing Poses
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Theory/transformations/" class="md-nav__link">
+        Transformations
+      </a>
     </li>
   
 
@@ -525,30 +582,85 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#transformations-inverse-transformations" class="md-nav__link">
-    Transformations &amp; Inverse Transformations
+  <a href="#description" class="md-nav__link">
+    Description
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#transforming-vectors" class="md-nav__link">
-    Transforming Vectors
+  <a href="#class-methods" class="md-nav__link">
+    Class Methods
+  </a>
+  
+    <nav class="md-nav" aria-label="Class Methods">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#etinit" class="md-nav__link">
+    ET.init
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#transforming-poses" class="md-nav__link">
-    Transforming Poses
+        
+          <li class="md-nav__item">
+  <a href="#etrandom" class="md-nav__link">
+    ET.random
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#transforming-forces-torques" class="md-nav__link">
-    Transforming Forces &amp; Torques
+        
+          <li class="md-nav__item">
+  <a href="#etfrom_vector" class="md-nav__link">
+    ET.from_vector
   </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#etzero" class="md-nav__link">
+    ET.zero
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#etinv" class="md-nav__link">
+    ET.inv
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#etvector" class="md-nav__link">
+    ET.vector
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#etx" class="md-nav__link">
+    ET.x
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ety" class="md-nav__link">
+    ET.y
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#etz" class="md-nav__link">
+    ET.z
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -570,57 +682,117 @@
   
 
 
-<h1 id="transformations">Transformations</h1>
-<p>Transformations are vital to for almost automation project.</p>
-<h2 id="transformations-inverse-transformations">Transformations &amp; Inverse Transformations</h2>
-<p>The transformations that we handle in this library are composed of rotations and translations. They can be represented as matrix, such as the following:</p>
-<div class="arithmatex">\[
-\underline{T} = \begin{bmatrix}
-\underline{R} &amp; \vec{t} \\
-[0]_{3\times 1} &amp; 1
-\end{bmatrix}
-\]</div>
-<p>where <span class="arithmatex">\(\underline{R}\)</span> is the rotation matrix and <span class="arithmatex">\(\vec{t}\)</span> is the translation vector.</p>
-<p>The inverse transform can be determined by the following operations on the elements of the original transformation:</p>
-<div class="arithmatex">\[
-T^{-1} = \begin{bmatrix}
-\underline{R}^{-1} &amp; -\underline{R}\vec{t} \\
-[0]_{3\times 1} &amp; 1
-\end{bmatrix}
-\]</div>
-<h2 id="transforming-vectors">Transforming Vectors</h2>
-<p>Transforming vectors involves the following operations below (in their order):
-1. Apply rotation to vector
-2. Add translation vector to rotated vector</p>
-<p>This can of course be done be multiplying the transformation matrix by the homogeneous variation of the input vector (while other methods exist, this is the most common and easiest to understand).</p>
-<h2 id="transforming-poses">Transforming Poses</h2>
-<p>In this documentation, we define a pose <span class="arithmatex">\(P\)</span> as an element containing an orientation <span class="arithmatex">\(O\)</span> and a position <span class="arithmatex">\(E\)</span>.</p>
-<p>Transforming poses is similar to transforming a vector. If we want to transform a pose <span class="arithmatex">\(P\)</span> from frame <span class="arithmatex">\(A\)</span> to frame <span class="arithmatex">\(B\)</span> we do the following:</p>
+<h1 id="et-class">ET Class</h1>
+<h2 id="description">Description</h2>
+<p>This page covers the Euclidean Translation (<code>ET</code>) class. This class is meant to represent positions and translations in the 2D and 3D euclidean space. One can use this class to apply a translation to a 3D or 2D vector.</p>
+<hr />
+<h2 id="class-methods">Class Methods</h2>
 <ul>
 <li>
-<p>Apply the transformation rotation to the orientation of the pose:</p>
-<div class="arithmatex">\[
-O_B = R_{A\rightarrow B} O_A
-\]</div>
+<h3 id="etinit">ET.<strong>init</strong></h3>
+<p><code>__init__(self, name: str = '', dim: int = 3, vector: np.ndarray|list = None) -&gt; None</code></p>
+<p>The <code>__init__</code> method is called when a new instance of the <code>ET</code> class is created. It initializes all of the variables in the class and sets them to their default values.</p>
+<p>By default, the <code>self.__vector</code> member value is set to zero.</p>
+<p><strong>Parameters</strong></p>
+<ul>
+<li><code>name</code> (<code>str</code>): Set the name of the object (default: '')</li>
+<li><code>dim</code> (<code>int</code>): Set the dimension of the vector (default: <code>3</code>)</li>
+<li><code>vector</code> (<code>np.ndarray|list</code>): Set value of vector at <code>__init__</code> (default: <code>None</code>)</li>
+</ul>
 </li>
 <li>
-<p>Add the transformation's translation to the position of the pose:</p>
-<div class="arithmatex">\[
-E_B = E_A + \vec{t}_{A\rightarrow B}
-\]</div>
+<h3 id="etrandom">ET.random</h3>
+<p><code>random(self) -&gt; None</code></p>
+<p>The <code>random</code> method sets the <code>self.__vector</code> member to a random state.</p>
+<div class="highlight"><span class="filename">Example</span><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">new_position</span> <span class="o">=</span> <span class="n">ET</span><span class="p">()</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="n">new_position</span><span class="o">.</span><span class="n">random</span><span class="p">()</span>           <span class="c1"># Set to random value</span>
+</code></pre></div>
+</li>
+<li>
+<h3 id="etfrom_vector">ET.from_vector</h3>
+<p><code>from_vector(self, vector: np.ndarray|list) -&gt; None</code></p>
+<p>The <code>from_vector</code> method sets the <code>self.__vector</code> to the input vector.</p>
+<p>The method also checks whether the input dimension matches the class dimension.</p>
+<p><strong>Parameters</strong></p>
+<ul>
+<li><code>vector</code> (<code>np.ndarray|list</code>): Input vector</li>
+</ul>
+<div class="highlight"><span class="filename">Example</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">new_position</span> <span class="o">=</span> <span class="n">ET</span><span class="p">()</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="n">new_position</span><span class="o">.</span><span class="n">from_vector</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span> <span class="c1"># Set value from input vector/list</span>
+</code></pre></div>
+</li>
+<li>
+<h3 id="etzero">ET.zero</h3>
+<p><code>zero(self) -&gt; None</code></p>
+<p>The <code>zero</code> method sets the <code>self.__vector</code> to zero.</p>
+<div class="highlight"><span class="filename">Example</span><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">new_position</span> <span class="o">=</span> <span class="n">ET</span><span class="p">()</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="n">new_position</span><span class="o">.</span><span class="n">random</span><span class="p">()</span>   <span class="c1"># Set to random value</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="n">new_position</span><span class="o">.</span><span class="n">zero</span><span class="p">()</span>     <span class="c1"># Set to zero</span>
+</code></pre></div>
+</li>
+<li>
+<h3 id="etinv">ET.inv</h3>
+<p><code>inv(self) -&gt; None</code></p>
+<p>The <code>inv</code> method sets the <code>self.__vector</code> member to its inverse (negative value).</p>
+<div class="highlight"><span class="filename">Example</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">new_position</span> <span class="o">=</span> <span class="n">ET</span><span class="p">()</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="n">new_position</span><span class="o">.</span><span class="n">random</span><span class="p">()</span>   <span class="c1"># Set to random value</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="n">new_position</span><span class="o">.</span><span class="n">inv</span><span class="p">()</span>      <span class="c1"># Set to negative value of random values</span>
+</code></pre></div>
+</li>
+<li>
+<h3 id="etvector">ET.vector</h3>
+<p><code>vector(self) -&gt; np.ndarray</code></p>
+<p>Return the value of the <code>self.__vector</code> member.</p>
+<p><strong>Returns</strong></p>
+<ul>
+<li><code>np.ndarray</code>: Value of <code>self.__vector</code> member</li>
+</ul>
+<div class="highlight"><span class="filename">Example</span><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">new_position</span> <span class="o">=</span> <span class="n">ET</span><span class="p">()</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="n">new_position</span><span class="o">.</span><span class="n">random</span><span class="p">()</span>   <span class="c1"># Set to random value</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="n">new_position</span><span class="o">.</span><span class="n">vector</span><span class="p">()</span>   <span class="c1"># Return position vector</span>
+</code></pre></div>
+</li>
+<li>
+<h3 id="etx">ET.x</h3>
+<p><code>x(self) -&gt; float</code></p>
+<p>Return the first element of the <code>self.__vector</code> member.</p>
+<p><strong>Returns</strong></p>
+<ul>
+<li><code>float</code>: First element of the <code>self.__vector</code> member</li>
+</ul>
+<div class="highlight"><span class="filename">Example</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="n">new_position</span> <span class="o">=</span> <span class="n">ET</span><span class="p">()</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="n">new_position</span><span class="o">.</span><span class="n">random</span><span class="p">()</span>   <span class="c1"># Set to random value</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="n">new_position</span><span class="o">.</span><span class="n">x</span><span class="p">()</span>        <span class="c1"># Return first element of position vector</span>
+</code></pre></div>
+</li>
+<li>
+<h3 id="ety">ET.y</h3>
+<p><code>y(self) -&gt; float</code></p>
+<p>Return the second element of the <code>self.__vector</code> member.</p>
+<p><strong>Returns</strong></p>
+<ul>
+<li><code>float</code>: Second element of the <code>self.__vector</code> member</li>
+</ul>
+<div class="highlight"><span class="filename">Example</span><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="n">new_position</span> <span class="o">=</span> <span class="n">ET</span><span class="p">()</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="n">new_position</span><span class="o">.</span><span class="n">random</span><span class="p">()</span>   <span class="c1"># Set to random value</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="n">new_position</span><span class="o">.</span><span class="n">y</span><span class="p">()</span>        <span class="c1"># Return second element of position vector</span>
+</code></pre></div>
+</li>
+<li>
+<h3 id="etz">ET.z</h3>
+<p><code>z(self) -&gt; float</code></p>
+<p>Return the third element of the <code>self.__vector</code> member.</p>
+<p><strong>Note:</strong> This method will only work for <code>ET</code> classes set to 3 dimensions.</p>
+<p><strong>Returns</strong></p>
+<ul>
+<li><code>float</code>: Third element of the <code>self.__vector</code> member</li>
+</ul>
+<div class="highlight"><span class="filename">Example</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="n">new_position</span> <span class="o">=</span> <span class="n">ET</span><span class="p">()</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="n">new_position</span><span class="o">.</span><span class="n">random</span><span class="p">()</span>   <span class="c1"># Set to random value</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="n">new_position</span><span class="o">.</span><span class="n">z</span><span class="p">()</span>        <span class="c1"># Return third element of position vector</span>
+</code></pre></div>
 </li>
 </ul>
-<h2 id="transforming-forces-torques">Transforming Forces &amp; Torques</h2>
-<p>Transforming the forces and torques (also known as a wrench vector) involves different calculations than for a simple vector. Let us demonstrate the theory with example parameters.</p>
-<p>Say we have a wrench vector in the frame <span class="arithmatex">\(A\)</span> (<span class="arithmatex">\(\vec{W}_A\)</span>), and we want to transform the force and torque elements to the frame <span class="arithmatex">\(B\)</span>. We know the transformation <span class="arithmatex">\(T_{A\rightarrow B}\)</span>.</p>
-<p>To transform the force <span class="arithmatex">\(\vec{F}_A\)</span>, we just need to apply the rotation to the force vector:</p>
-<div class="arithmatex">\[
-\vec{F}_B = R_{A\rightarrow B} \vec{F}_A
-\]</div>
-<p>To transform the torque <span class="arithmatex">\(\vec{M}_A\)</span>, we do the following calculation:</p>
-<div class="arithmatex">\[
-\vec{M}_B = R_{A\rightarrow B} \left[ \left(\vec{F}_A \times \vec{t}_{A\rightarrow B}\right) + \vec{M}_A \right]
-\]</div>
 
 
 
