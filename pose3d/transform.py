@@ -8,8 +8,9 @@ from .pose import Pose
 
 from .utils import valid_dim
 
+
 class Transform:
-    def __init__(self, name: str, orig: str = 'origin', dest: str = 'destination', te_dim: int = 3, re_dim: int = 3) -> None:
+    def __init__(self, name: str, orig: str = 'origin', dest: str = 'destination', te_dim: int = 3, re_dim: int = 3):
         # Set strings
         self.name = name
         self.origin = orig
@@ -17,24 +18,28 @@ class Transform:
 
         # Init translation and rotation members
         if valid_dim(te_dim):
-            self.translation = ET(dim = te_dim)
+            self.translation = ET(dim=te_dim)
 
         if valid_dim(re_dim):
-            self.rotation = ER(dim = re_dim)
+            self.rotation = ER(dim=re_dim)
 
     # Setter functions
     def between_poses(self, pose_1: Pose, pose_2: Pose) -> None:
-        '''
+        """
         Compute transform between 2 3D poses. This instance of Transform
         will be modified to compute the transform from pose_1 to pose_2.
 
-        Parameters
-        ----------
+        Parameters:
+        -----------
         - `pose_1` (`Pose`): Origin pose.
         - `pose_2` (`Pose`): Destination pose.
-        '''
+        """
         if pose_1.dims() != pose_2.dims():
-            raise AttributeError(f'Number of dimensions between both poses do not match: pose_1.dims() = {pose_1.dims()} and pose_2.dims = {pose_2.dims()}.')
+            raise AttributeError(
+                f'''Number of dimensions between both poses do not match:
+                    pose_1.dims() = {pose_1.dims()}
+                    pose_2.dims = {pose_2.dims()}'''
+            )
 
         # Modify dimension of transformation depending on pose_1 and pose_2
         if pose_1.position.dim != self.translation.dim:
@@ -48,45 +53,45 @@ class Transform:
         self.translation.vector = pose_2.position.vector - pose_1.position.vector
 
     def identity(self) -> None:
-        '''
+        """
         Set the transformation to zero and the rotation to identity.
-        '''
+        """
         self.translation.zero()
         self.rotation.identity()
 
     def inv(self) -> None:
-        '''
-        Set the transformation it's inverse.
-        '''
+        """
+        Set the transformation to its inverse.
+        """
         self.rotation.inv()
         self.translation.vector = -self.rotation.apply(self.translation.vector)
 
     def random(self) -> None:
-        '''
+        """
         Set a random transformation.
-        '''
+        """
         self.translation.random()
         self.rotation.random()
 
     # Getter functions
     def dims(self) -> Tuple[int, int]:
-        '''
+        """
         Returns the dimensions of the translation and rotation (in that order).
 
-        Returns
-        -------
+        Returns:
+        --------
         - `tuple[int, int]`: Dimension of translation and rotation (in that order)
-        '''
+        """
         return self.translation.dim, self.rotation.dim
 
     def matrix(self, homogeneous: bool = True) -> np.ndarray:
-        '''
+        """
         Return the transformation matrix.
 
-        Returns
-        -------
+        Returns:
+        --------
         - `np.ndarray`: Transformation matrix
-        '''
+        """
         matrix = np.eye(max(self.dims()) + 1)
 
         if self.origin != self.destination:
@@ -100,18 +105,19 @@ class Transform:
 
     # Computation functions
     def apply(self, io_element: Union[Pose, np.ndarray]) -> Union[Pose, np.ndarray]:
-        '''
+        """
         Apply transformation to `io`.
 
-        Parameters
-        ----------
+        Parameters:
+        -----------
         - `io_element` (`Union[Pose, np.ndarray]`): Element to apply transformation to
 
-        Returns
-        -------
+        Returns:
+        --------
         - `Union[Pose, np.ndarray]`: Output pose/vector
-        '''
+        """
         # If io_element is a Pose
+        output = None
         if isinstance(io_element, Pose):
             output = Pose(et_dim=io_element.position.dim, er_dim=io_element.orientation.dim)
             output.position.vector = io_element.position.vector
