@@ -1,52 +1,56 @@
+from pose3d import ER
+
 import numpy as np
 import pytest
 
-from sys import path
-from pathlib import Path
-path.append(Path(__file__).parents[1].as_posix())
+TOLERANCE = 1e-6
 
-from pose3d import ER
-from pose3d.utils import ER_TOLERANCE
 
-def test_ER_default_constructor():
+def test_er_default_constructor():
     r = ER()
     assert r.name == ''
     assert r.dim == 3
-    assert np.allclose(r.as_quat(), np.array([0, 0, 0, 1]), rtol=1e-6, atol=1e-6)
+    assert np.allclose(r.as_quat(), np.array([0, 0, 0, 1]), rtol=TOLERANCE, atol=TOLERANCE)
 
-def test_ER_constructor_with_args():
+
+def test_er_constructor_with_args():
     r = ER('test', dim=2)
     assert r.name == 'test'
     assert r.dim == 2
-    assert np.allclose(r.as_quat(), np.array([0, 0, 0, 1]), rtol=1e-6, atol=1e-6)
+    assert np.allclose(r.as_quat(), np.array([0, 0, 0, 1]), rtol=TOLERANCE, atol=TOLERANCE)
 
-def test_ER_identity():
+
+def test_er_identity():
     r = ER()
     r.random()
     r.identity()
-    assert np.allclose(r.as_quat(), np.array([0, 0, 0, 1]), rtol=1e-6, atol=1e-6)
+    assert np.allclose(r.as_quat(), np.array([0, 0, 0, 1]), rtol=TOLERANCE, atol=TOLERANCE)
 
-def test_ER_inv():
+
+def test_er_inv():
     r = ER()
     r.random()
     r_inv = r.as_matrix()
     r_inv = np.linalg.inv(r_inv)
     r.inv()
-    assert np.allclose(r.as_matrix(), r_inv, rtol=1e-6, atol=1e-6)
+    assert np.allclose(r.as_matrix(), r_inv, rtol=TOLERANCE, atol=TOLERANCE)
 
-def test_ER_random():
+
+def test_er_random():
     r1 = ER()
     r1.random()
     r2 = ER()
     r2.random()
-    assert not np.allclose(r1.as_quat(), r2.as_quat(), rtol=1e-6, atol=1e-6)
+    assert not np.allclose(r1.as_quat(), r2.as_quat(), rtol=TOLERANCE, atol=TOLERANCE)
 
-def test_ER_from_quat():
+
+def test_er_from_quat():
     r = ER()
     r.from_quat(np.array([0.707107, 0, 0, 0.707107]))
-    assert np.allclose(r.as_quat(), np.array([0.707107, 0, 0, 0.707107]), rtol=1e-6, atol=1e-6)
+    assert np.allclose(r.as_quat(), np.array([0.707107, 0, 0, 0.707107]), rtol=TOLERANCE, atol=TOLERANCE)
 
-def test_ER_from_matrix():
+
+def test_er_from_matrix():
     # Test 3D rotation
     er = ER(dim=3)
     er2 = ER(dim=3)
@@ -61,7 +65,8 @@ def test_ER_from_matrix():
     er.from_matrix(er2.as_matrix())
     assert np.allclose(er2.as_matrix(), er.as_matrix())
 
-def test_ER_from_angle_axis():
+
+def test_er_from_angle_axis():
     # Test 3D rotation
     er = ER(dim=3)
     er.random()
@@ -74,7 +79,8 @@ def test_ER_from_angle_axis():
     with pytest.raises(AttributeError):
         er.from_angle_axis(np.random.uniform(-np.pi, np.pi, size=(2,)))
 
-def test_ER_from_euler():
+
+def test_er_from_euler():
     # Test 3D rotation
     er = ER(dim=3)
     angles = np.random.uniform(-np.pi, np.pi, size=(3,))
@@ -87,9 +93,11 @@ def test_ER_from_euler():
     er.from_euler(sequence=None, angles=angles)
     assert np.allclose(er.as_euler(sequence=None), angles)
 
-def test_ER_dim():
+
+def test_er_dim():
     r = ER(dim=2)
     assert r.dim == 2
+
 
 def test_as_quat():
     er = ER()
@@ -104,7 +112,8 @@ def test_as_quat():
     quat = er.as_quat()
     assert isinstance(quat, np.ndarray)
     assert quat.shape == (4,)
-    assert np.allclose(np.linalg.norm(quat), 1.0, rtol=1e-6)
+    assert np.allclose(np.linalg.norm(quat), 1.0, rtol=TOLERANCE)
+
 
 def test_as_matrix():
     er = ER()
@@ -119,7 +128,8 @@ def test_as_matrix():
     matrix = er.as_matrix()
     assert isinstance(matrix, np.ndarray)
     assert matrix.shape == (2, 2)
-    assert np.allclose(np.dot(matrix, matrix.T), np.eye(2), rtol=1e-6)
+    assert np.allclose(np.dot(matrix, matrix.T), np.eye(2), rtol=TOLERANCE)
+
 
 def test_as_angle_axis():
     er = ER()
@@ -134,7 +144,8 @@ def test_as_angle_axis():
     angle_axis = er.as_angle_axis()
     assert isinstance(angle_axis, np.ndarray)
     assert angle_axis.shape == (3,)
-    assert np.isclose(np.linalg.norm(angle_axis), 1.0, rtol=1e-6)
+    assert np.isclose(np.linalg.norm(angle_axis), 1.0, rtol=TOLERANCE)
+
 
 def test_as_euler():
     er = ER()
@@ -149,7 +160,8 @@ def test_as_euler():
     assert isinstance(euler, float)
     assert np.abs(euler) <= 360
 
-def test_ER_apply():
+
+def test_er_apply():
     # Test 3D rotation
     er = ER(dim=3)
     er.random()
