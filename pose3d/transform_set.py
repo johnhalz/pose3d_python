@@ -59,6 +59,7 @@ class TransformSet:
 
         return transformation.apply(input_element)
 
+    # noinspection PyUnreachableCode
     def wrench_change_frame(self, wrench: np.ndarray, from_frame: str, to_frame: str) -> np.ndarray:
         """
         Method to change frame of wrench vector.
