@@ -6,7 +6,7 @@ import pytest
 
 @pytest.fixture
 def pose():
-    return Pose(name='Test', et_dim=3, er_dim=3)
+    return Pose(name='Test')
 
 
 def test_pose_init(pose):

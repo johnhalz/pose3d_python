@@ -4,19 +4,25 @@ import numpy as np
 
 
 def test_transform_between_poses():
-    pose1 = Pose(et_dim=3, er_dim=3)
-    pose2 = Pose(et_dim=3, er_dim=3)
+    pose1 = Pose()
+    pose2 = Pose()
     transform = Transform(name="test")
 
     # Random poses
     pose1.random()
     pose2.random()
 
-    transform.between_poses(pose1, pose2)
+    transform.between_poses(origin_pose=pose1, destination_pose=pose2)
 
-    np.testing.assert_allclose(transform.matrix()[:3, :3],
-                               np.linalg.inv(pose2.orientation.as_matrix()) @ pose1.orientation.as_matrix())
-    np.testing.assert_allclose(transform.matrix()[:3, -1], pose2.position.vector - pose1.position.vector)
+    np.testing.assert_allclose(
+        transform.rotation.as_matrix(),
+        pose2.orientation.as_matrix() @ np.linalg.inv(pose1.orientation.as_matrix())
+    )
+
+    np.testing.assert_allclose(
+        transform.translation.vector,
+        pose2.position.vector - pose1.position.vector
+    )
 
 
 def test_transform_identity():
@@ -57,7 +63,7 @@ def test_transform_dims():
 
 
 def test_transform_apply_with_pose():
-    pose = Pose(et_dim=3, er_dim=3)
+    pose = Pose()
     transform = Transform(name="test")
     transform.random()
 

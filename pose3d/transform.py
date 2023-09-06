@@ -1,56 +1,44 @@
-import numpy as np
 from typing import Tuple, Union
+
+from attrs import field, define
+import numpy as np
 
 from .et import ET
 from .er import ER
-
 from .pose import Pose
 
-from .utils import valid_dim
 
-
+@define
 class Transform:
-    def __init__(self, name: str, orig: str = 'origin', dest: str = 'destination', te_dim: int = 3, re_dim: int = 3):
-        # Set strings
-        self.name = name
-        self.origin = orig
-        self.destination = dest
-
-        # Init translation and rotation members
-        if valid_dim(te_dim):
-            self.translation = ET(dim=te_dim)
-
-        if valid_dim(re_dim):
-            self.rotation = ER(dim=re_dim)
+    name: str = field(default='', eq=False)
+    origin: str = field(default='origin', eq=False)
+    destination: str = field(default='destination', eq=False)
+    translation: ET = field(factory=ET)
+    rotation: ER = field(factory=ER)
 
     # Setter functions
-    def between_poses(self, pose_1: Pose, pose_2: Pose) -> None:
+    def between_poses(self, origin_pose: Pose, destination_pose: Pose):
         """
         Compute transform between 2 3D poses. This instance of Transform
         will be modified to compute the transform from pose_1 to pose_2.
 
         Parameters:
         -----------
-        - `pose_1` (`Pose`): Origin pose.
-        - `pose_2` (`Pose`): Destination pose.
+        - `origin_pose` (`Pose`): Origin pose
+        - `destination_pose` (`Pose`): Destination pose
         """
-        if pose_1.dims() != pose_2.dims():
+        if origin_pose.dims() != destination_pose.dims():
             raise AttributeError(
                 f'''Number of dimensions between both poses do not match:
-                    pose_1.dims() = {pose_1.dims()}
-                    pose_2.dims = {pose_2.dims()}'''
+                    pose_1.dims = {origin_pose.dims()}
+                    pose_2.dims = {destination_pose.dims()}'''
             )
 
-        # Modify dimension of transformation depending on pose_1 and pose_2
-        if pose_1.position.dim != self.translation.dim:
-            self.translation = ET(dim=pose_1.position.dim)
-
-        if pose_1.orientation.dim != self.rotation.dim:
-            self.rotation = ER(dim=pose_1.orientation.dim)
-
-        # Compute rotation from pose_1 to pose_2
-        self.rotation.from_matrix(np.dot(np.linalg.inv(pose_2.orientation.as_matrix()), pose_1.orientation.as_matrix()))
-        self.translation.vector = pose_2.position.vector - pose_1.position.vector
+        # Compute rotation from origin_pose to destination_pose
+        self.rotation.from_matrix(
+            destination_pose.orientation.as_matrix() @ np.linalg.inv(origin_pose.orientation.as_matrix())
+        )
+        self.translation.vector = destination_pose.position.vector - origin_pose.position.vector
 
     def identity(self) -> None:
         """
@@ -119,7 +107,10 @@ class Transform:
         # If io_element is a Pose
         output = None
         if isinstance(io_element, Pose):
-            output = Pose(et_dim=io_element.position.dim, er_dim=io_element.orientation.dim)
+            output = Pose(
+                position=ET(dim=io_element.position.dim),
+                orientation=ER(dim=io_element.orientation.dim)
+            )
             output.position.vector = io_element.position.vector
             output.orientation.from_quat(io_element.orientation.as_quat())
 
@@ -132,18 +123,3 @@ class Transform:
             output = self.rotation.apply(output) + self.translation.vector
 
         return output
-
-    # Operator overloads
-    def __repr__(self) -> str:
-        return f'''Transform - {self.name}:
-        Translation: {self.translation.__repr__}
-        Rotation:    {self.rotation.__repr__}'''
-
-    def __str__(self) -> str:
-        return f'Translation: {self.translation.__repr__}\nRotation:    {self.rotation.__repr__}'
-
-    def __eq__(self, other: object) -> bool:
-        return self.translation == other.translation and self.rotation == other.rotation
-
-    def __ne__(self, other: object) -> bool:
-        return self.translation != other.translation or self.rotation != other.rotation

@@ -1,82 +1,29 @@
-import toml
+from typing import Dict
+
+from attrs import define, field
 import numpy as np
-from pathlib import Path
 
-from typing import Union
 
-from .utils import VALID_ROTATION_TYPES
 from .pose import Pose
 from .transform import Transform
 
 
+@define
 class TransformSet:
-    def __init__(self, transf_set: Union[str, Path, dict]) -> None:
+    frames: Dict[str, Pose] = field(default={})
 
-        self.frames = {}
-        if isinstance(transf_set, str) or isinstance(transf_set, Path):
-            path = Path(transf_set)
-            if not path.exists():
-                raise ValueError(f'Input path ({path.as_posix()}) not found or does not exist.')
-
-            self.__frame_data = toml.load(transf_set)
-        elif isinstance(transf_set, dict):
-            self.__frame_data = transf_set
-
-        # Create dictionary of frames (from which we can create transformations)
-        for frame_name, frame_data in self.__frame_data.items():
-            self.add_frame(frame_name=frame_name, frame_data=frame_data)
-
-        # Add base frame if not present
-        if 'base' not in self.frame_names():
-            base_frame = Pose(name='base')
-            base_frame.position.zero()
-            base_frame.orientation.identity()
-            self.frames['base'] = base_frame
-
-    # Setter methods
-    # noinspection PyUnboundLocalVariable
-    def add_frame(self, frame_name: str, frame_data: Union[dict, Pose]) -> None:
+    def add_frame(self, frame_name: str, frame_data: Pose):
         """
         Add frame to transform set.
 
         Parameters:
         -----------
         - `frame_name` (`str`): Name of new frame
-        - `frame_data` (`dict | Pose`): Data of frame
+        - `frame_data` (`Pose`): Pose of frame
         """
-        if frame_name == '' or frame_name in self.frame_names():
-            raise ValueError(f"Invalid pose name {frame_name}. Please use a different name.")
-
-        if isinstance(frame_data, Pose):
-            new_frame = frame_data
-            new_frame.name = frame_name
-
-        elif isinstance(frame_data, dict):
-            new_frame = Pose(name=frame_name)
-
-            # Extract position
-            new_frame.position.vector = frame_data['position']
-
-            # Extract orientation
-            orientation_value = frame_data['orientation']
-            orientation_type = frame_data['orientation_type'].lower()
-            degrees = 'degree' in frame_data['orientation_units'].lower()
-
-            if orientation_type == 'euler':
-                new_frame.orientation.from_euler('xyz', orientation_value, degrees=degrees)
-            elif orientation_type == 'quaternion':
-                new_frame.orientation.from_quat(orientation_value)
-            elif orientation_type == 'angle-axis':
-                new_frame.orientation.from_angle_axis(orientation_value)
-            elif orientation_type == 'matrix':
-                new_frame.orientation.from_matrix(orientation_value)
-            else:
-                raise ValueError(
-                    f'Invalid rotation type: {orientation_type}. Rotation type must be: {VALID_ROTATION_TYPES}'
-                )
 
         # Save new frame to self.frames
-        self.frames[frame_name] = new_frame
+        self.frames[frame_name] = frame_data
 
     # Getter methods
     def frame_names(self) -> list:
@@ -112,7 +59,6 @@ class TransformSet:
 
         return transformation.apply(input_element)
 
-    # noinspection PyUnreachableCode
     def wrench_change_frame(self, wrench: np.ndarray, from_frame: str, to_frame: str) -> np.ndarray:
         """
         Method to change frame of wrench vector.
@@ -141,7 +87,7 @@ class TransformSet:
         force_at_origin = wrench[:3]
         torque_at_origin = wrench[3:]
 
-        unrotated_torque = torque_at_origin + np.cross(force_at_origin, transformation.translation)
+        unrotated_torque = torque_at_origin + np.cross(transformation.translation.vector, force_at_origin)
         torque_at_dest = transformation.rotation.apply(unrotated_torque)
         force_at_dest = transformation.rotation.apply(force_at_origin)
 
@@ -184,7 +130,7 @@ class TransformSet:
         --------
         - `Transform`: Transform object
         """
-        transformation = Transform(name=f'{from_frame}2{to_frame}', orig=from_frame, dest=to_frame)
-        transformation.between_poses(pose_1=self.frames[from_frame], pose_2=self.frames[to_frame])
+        transformation = Transform(name=f'{from_frame}2{to_frame}', origin=from_frame, destination=to_frame)
+        transformation.between_poses(origin_pose=self.frames[from_frame], destination_pose=self.frames[to_frame])
 
         return transformation
