@@ -13,7 +13,7 @@ def et():
 # Tests
 def test_et_constructor():
     et1 = ET()
-    et2 = ET(name="test", dim=2, vector=[1, 2])
+    et2 = ET(name="test", vector=[1, 2])
 
     assert et1.name == ''
     assert et1.dim == 3

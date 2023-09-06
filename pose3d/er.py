@@ -1,55 +1,43 @@
 from typing import Union
 
+from attrs import define, field, validators
 import numpy as np
 from scipy.spatial.transform import Rotation
-from .utils import ER_TOLERANCE, valid_dim
+
+from .utils import validate_dim
 
 
+@define
 class ER:
-    def __init__(self, name: str = '', dim: int = 3) -> None:
-        """
-        The `__init__` function is called when a new instance of the `RE` class is created.
-        It initializes all the variables in the class and sets them to their default values.
-
-        By default, the `self.__rotation` member value is set to an identity value.
-
-        Parameters:
-        -----------
-        - `name` (`str`): Set the name of the object (default: "")
-        - `dim` (`int`): Set the dimension of the vector (default: 3)
-        """
-        self.name = name
-        self.__rotation = Rotation(quat=[0, 0, 0, 1])
-        self.identity()
-
-        if valid_dim(dim):
-            self.__dim = dim
+    name: str = field(default='', eq=False)
+    dim: int = field(default=3, validator=validate_dim, repr=False)
+    _rotation: Rotation = field(default=Rotation.identity(), repr=False)
 
     # Setter functions
-    def identity(self) -> None:
+    def identity(self):
         """
         The `identity` function sets the `self.__rotation` member to
         the equivalent of an identity matrix.
         """
-        self.__rotation = Rotation.identity()
+        self._rotation = Rotation.identity()
 
-    def inv(self) -> None:
+    def inv(self):
         """
         The `inv` function sets the `self.__rotation` member to its inverse.
         """
-        self.__rotation = self.__rotation.inv()
+        self._rotation = self._rotation.inv()
 
-    def random(self) -> None:
+    def random(self):
         """
         The `random` function sets the `self.__rotation` member to a random value.
         """
         if self.dim == 2:
-            self.__rotation.from_euler('z', np.random.uniform(0, 360))
+            self._rotation.from_euler('z', np.random.uniform(0, 360))
 
         else:
-            self.__rotation = Rotation.random()
+            self._rotation = Rotation.random()
 
-    def from_quat(self, quat: Union[np.ndarray, list]) -> None:
+    def from_quat(self, quat: Union[np.ndarray, list]):
         """
         The `from_quat` function set the `self.__rotation` member from the value of
         the input `quat`.
@@ -60,7 +48,7 @@ class ER:
         -----------
         - `quat` (`Union[np.ndarray, list]`): Input quaternion
         """
-        if self.__dim == 2:
+        if self.dim == 2:
             raise AttributeError(
                 'Unable to set 2D rotation from quaternion input.'
             )
@@ -70,9 +58,9 @@ class ER:
                 f'Input vector shape must be equal to 4 (input shape: {len(quat)}).'
             )
 
-        self.__rotation = Rotation.from_quat(np.array(quat))
+        self._rotation = Rotation.from_quat(np.array(quat))
 
-    def from_matrix(self, matrix: np.ndarray) -> None:
+    def from_matrix(self, matrix: np.ndarray):
         """
         The `from_matrix` function set the `self.__rotation` member from the value of
         the input `matrix`. The function will first check whether the input matrix dimensions
@@ -92,9 +80,9 @@ class ER:
             matrix = np.hstack((np.array(matrix), np.zeros(shape=(2, 1))))
             matrix = np.vstack((np.array(matrix), [0, 0, 1]))
 
-        self.__rotation = Rotation.from_matrix(matrix)
+        self._rotation = Rotation.from_matrix(matrix)
 
-    def from_angle_axis(self, angle_axis: np.ndarray) -> None:
+    def from_angle_axis(self, angle_axis: np.ndarray):
         """
         The `from_angle_axis` function set the `self.__rotation` member from the value of
         the input `angle_axis`.
@@ -115,9 +103,9 @@ class ER:
                 f'Input vector shape must be equal to 3 (input shape: {len(angle_axis)}).'
             )
 
-        self.__rotation = Rotation.from_rotvec(np.array(angle_axis) / np.linalg.norm(angle_axis))
+        self._rotation = Rotation.from_rotvec(np.array(angle_axis) / np.linalg.norm(angle_axis))
 
-    def from_euler(self, sequence: str = None, angles: Union[np.ndarray, list] = None, degrees: bool = True) -> None:
+    def from_euler(self, sequence: str = None, angles: Union[np.ndarray, list] = None, degrees: bool = True):
         """
         The `from_euler` function set the `self.__rotation` member from the value(s) of
         the inputs `sequence` and `angles`. The angle will be converted from degrees to
@@ -140,23 +128,12 @@ class ER:
                     'Input sequence cannot be None.'
                 )
 
-            self.__rotation = Rotation.from_euler(sequence, np.array(angles), degrees)
+            self._rotation = Rotation.from_euler(sequence, np.array(angles), degrees)
 
         elif self.dim == 2:
-            self.__rotation = Rotation.from_euler('z', np.array(angles), degrees)
+            self._rotation = Rotation.from_euler('z', np.array(angles), degrees)
 
     # Getter functions
-    @property
-    def dim(self) -> int:
-        """
-        Return the number of dimensions.
-
-        Returns:
-        --------
-        - `int`: Value of `self.__dim` member
-        """
-        return self.__dim
-
     def as_quat(self) -> np.ndarray:
         """
         Return the stored `self.__rotation` member in quaternion form.
@@ -165,7 +142,7 @@ class ER:
         --------
         - `np.ndarray`: Quaternion vector
         """
-        return self.__rotation.as_quat()
+        return self._rotation.as_quat()
 
     def as_matrix(self) -> np.ndarray:
         """
@@ -175,7 +152,7 @@ class ER:
         --------
         - `np.ndarray`: Rotation matrix
         """
-        return self.__rotation.as_matrix()[:self.dim, :self.dim]
+        return self._rotation.as_matrix()[:self.dim, :self.dim]
 
     def as_angle_axis(self, normalized: bool = True) -> np.ndarray:
         """
@@ -189,7 +166,7 @@ class ER:
         --------
         - `np.ndarray`: Angle-axis vector
         """
-        rotvec = self.__rotation.as_rotvec()
+        rotvec = self._rotation.as_rotvec()
         norm = np.linalg.norm(rotvec)
 
         if norm == 0.0:
@@ -214,14 +191,14 @@ class ER:
         - `Union[np.ndarray, float]`: Euler angle(s) (if `RE` is in 2D then only a float will be returned)
         """
         if self.dim == 2:
-            return self.__rotation.as_euler('zyx', degrees)[0]
+            return self._rotation.as_euler('zyx', degrees)[0]
 
         if sequence is None:
             raise ValueError(
                 'Input sequence cannot be None.'
             )
 
-        return self.__rotation.as_euler(sequence, degrees)
+        return self._rotation.as_euler(sequence, degrees)
 
     def yaw(self, degrees: bool = True) -> float:
         """
@@ -242,7 +219,7 @@ class ER:
                 'Unable to return yaw angle of 2D rotation (Call as_euler() instead).'
             )
 
-        return float(self.__rotation.as_euler('xyz', degrees)[2])
+        return float(self._rotation.as_euler('xyz', degrees)[2])
 
     def pitch(self, degrees: bool = True) -> float:
         """
@@ -263,7 +240,7 @@ class ER:
                 'Unable to return pitch angle of 2D rotation (Call as_euler() instead).'
             )
 
-        return float(self.__rotation.as_euler('xyz', degrees)[1])
+        return float(self._rotation.as_euler('xyz', degrees)[1])
 
     def roll(self, degrees: bool = True) -> float:
         """
@@ -284,7 +261,7 @@ class ER:
                 'Unable to return roll angle of 2D rotation (Call as_euler() instead).'
             )
 
-        return float(self.__rotation.as_euler('xyz', degrees)[0])
+        return float(self._rotation.as_euler('xyz', degrees)[0])
 
     # Computation functions
     def apply(self, input_element: Union[np.ndarray, list]) -> np.ndarray:
@@ -312,46 +289,9 @@ class ER:
         if self.dim == 2:
             input_element = np.hstack((input_element, [0]))
 
-        result = self.__rotation.apply(input_element)
+        result = self._rotation.apply(input_element)
 
         if self.dim == 2:
             return result[:2]
 
         return result
-
-    # Operator overloading
-    def __str__(self) -> str:
-        return f'ER{self.dim} - {self.name}: {self.__repr__()} degrees'
-
-    def __repr__(self) -> str:
-        sequence = 'xyz'
-        if self.dim == 2:
-            sequence = 'z'
-        elif self.dim != 3:
-            raise ValueError(
-                f'Invalid dimension ({self.dim}) - Only 2D and 3D rotations are supported.'
-            )
-
-        return f"{self.as_euler(sequence, degrees=True)}"
-
-    def __eq__(self, other):
-        if isinstance(other, ER):
-            return np.allclose(self.as_quat(),
-                               other.as_quat(),
-                               rtol=ER_TOLERANCE,
-                               atol=ER_TOLERANCE)
-
-        raise TypeError(
-            f'Input parameter is {type(other)}, not RE as expected.'
-        )
-
-    def __ne__(self, other):
-        if isinstance(other, ER):
-            return not np.allclose(self.as_quat(),
-                                   other.as_quat(),
-                                   rtol=ER_TOLERANCE,
-                                   atol=ER_TOLERANCE)
-
-        raise TypeError(
-            f'Input parameter is {type(other)}, not RE as expected.'
-        )

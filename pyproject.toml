@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pose3d"
-version = "2.1.1a1"
+version = "2.2.0a1"
 description = "Transforming and handling 3D poses and frames."
 authors = ["John Halazonetis <john.halazonetis@icloud.com>"]
 license = "MIT"
@@ -13,6 +13,7 @@ numpy = "^1.24.3"
 scipy = "^1.10.1"
 pandas = "^2.0.1"
 toml = "^0.10.2"
+attrs = "^23.1.0"
 
 
 [tool.poetry.group.dev.dependencies]
